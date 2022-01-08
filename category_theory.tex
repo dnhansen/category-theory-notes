@@ -1,0 +1,1381 @@
+% Document setup
+\documentclass[article, a4paper, 11pt, oneside]{memoir}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[UKenglish]{babel}
+
+% Document info
+\newcommand\doctitle{Category theory notes}
+\newcommand\docauthor{Danny Nygård Hansen}
+
+% Formatting and layout
+\usepackage[autostyle]{csquotes}
+\usepackage[final]{microtype}
+\usepackage{xcolor}
+\frenchspacing
+\usepackage{latex-sty/articlepagestyle}
+\usepackage{latex-sty/articlesectionstyle}
+
+% Fonts
+\usepackage[largesmallcaps]{kpfonts}
+\DeclareSymbolFontAlphabet{\mathrm}{operators} % https://tex.stackexchange.com/questions/40874/kpfonts-siunitx-and-math-alphabets
+\linespread{1.06}
+\let\mathfrak\undefined
+\usepackage{eufrak}
+\usepackage{inconsolata}
+\usepackage{amssymb}
+
+% Hyperlinks
+\usepackage{hyperref}
+\definecolor{linkcolor}{HTML}{4f4fa3}
+\hypersetup{%
+	pdftitle=\doctitle,
+	pdfauthor=\docauthor,
+	colorlinks,
+	linkcolor=linkcolor,
+	citecolor=linkcolor,
+	urlcolor=linkcolor,
+	bookmarksnumbered=true
+}
+
+% Equation numbering
+\numberwithin{equation}{chapter}
+
+% Footnotes
+\footmarkstyle{\textsuperscript{#1}\hspace{0.25em}}
+
+% Mathematics
+\usepackage{latex-sty/basicmathcommands}
+\usepackage{latex-sty/framedtheorems}
+\usepackage{latex-sty/topologycommands}
+\usepackage{tikz-cd}
+\usetikzlibrary{babel}
+
+% Lists
+\usepackage{enumitem}
+\setenumerate[0]{label=\normalfont(\arabic*)}
+
+% Bibliography
+\usepackage[backend=biber, style=authoryear, maxcitenames=2, useprefix]{biblatex}
+\addbibresource{references.bib}
+
+% Title
+\title{\doctitle}
+\author{\docauthor}
+
+\newcommand{\calL}{\mathcal{L}}
+\newcommand{\calE}{\mathcal{E}}
+\newcommand{\calF}{\mathcal{F}}
+
+
+\newcommand{\cat}[1]{\mathcal{#1}}
+\newcommand{\scat}[1]{\mathbf{#1}} % category supposed to be small
+\newcommand{\ncat}[1]{\mathbf{#1}} % named categories like Set, Top
+
+% Categories
+\newcommand{\catSet}{\ncat{Set}}
+\newcommand{\catTop}{\ncat{Top}}
+\newcommand{\cathTop}{\ncat{hTop}}
+\newcommand{\catGrp}{\ncat{Grp}}
+\newcommand{\catAb}{\ncat{Ab}}
+\newcommand{\catMon}{\ncat{Mon}}
+\newcommand{\catOrd}{\ncat{Ord}}
+\newcommand{\catFinSet}{\ncat{FinSet}}
+\newcommand{\catRing}{\ncat{Ring}}
+\newcommand{\catFinGrp}{\ncat{FinGrp}}
+\newcommand{\catProp}{\ncat{Prop}}
+\newcommand{\catMeas}{\ncat{Meas}}
+\newcommand{\catCount}{\ncat{Count}}
+\newcommand{\catPoset}{\ncat{Poset}}
+\newcommand{\catVect}{\ncat{Vect}}
+
+
+\newcommand{\catC}{\cat{C}}
+\newcommand{\catD}{\cat{D}}
+\newcommand{\catS}{\cat{S}}
+\newcommand{\scatJ}{\scat{J}}
+\newcommand{\op}{\mathrm{op}}
+\let\oldcoprod\coprod
+\newcommand{\bigcoprod}{\oldcoprod}
+\renewcommand{\coprod}{\amalg}
+\newcommand{\freeprod}{*} % Or \star
+\newcommand{\dirsum}{\oplus}
+\newcommand{\from}{\leftarrow}
+\DeclarePairedDelimiterX{\prodar}[2]{\langle}{\rangle}{#1,#2}
+
+\DeclarePairedDelimiter{\subobj}{\llbracket}{\rrbracket}
+
+\usepackage{tikz-cd}
+
+
+% Section style -- add to section style .sty?
+\setsubsecheadstyle{\normalfont\itshape}
+
+
+% Preimage -- to be added to mathcommands .sty
+\newcommand{\preim}{^{-1}}
+
+
+\begin{document}
+
+\maketitle
+
+\chapter{Basic definitions}
+
+\begin{definition}[Categories]
+    A \emph{category} $\catC$ consists of a collection of \emph{objects} and a collection of \emph{arrow} satisfying the following axioms:
+    %
+    \begin{enumdef}
+        \item To each arrow $f$ are associated unique objects called the \emph{source} and \emph{target} of $f$. We write $f \colon A \to B$ to notate that $f$ is an arrow with source $A$ and target $B$.
+        
+        \item For two arrows $f \colon A \to B$ and $g \colon B \to C$ there exists a \emph{composite} arrow $g \circ f \colon A \to C$.
+        
+        \item For each object there is an arrow $1_A \colon A \to A$ called the \emph{identity arrow} on $A$.
+        
+        \item Composition is associative, and identity arrows behave as identities with respect to composition.
+    \end{enumdef}
+\end{definition}
+%
+We note that identity arrows on a given object are unique, and the identity arrows on different objects are distinct.
+
+For two objects $A,B$ in some category $\catC$, we write $\catC(A,B)$ for the collection of arrows $A \to B$ in $\catC$.% \subcref{test} |\mysubcref{test}|\cref{test}
+
+\begin{examplebreak}
+    \begin{enumexample}
+        \item \label{test} There is a category $\catMon$ whose objects are monoids and arrows are monoid homomorphisms.
+        
+        \item Similarly there is a category $\catOrd$ whose objects are preordered collections (not necessarily sets, I guess) and whose arrows are monotone maps.
+        
+        \item There are also categories of groups, abelian groups, rings, commutative rings, posets, totally ordered sets, topological spaces, etc.
+    \end{enumexample}
+\end{examplebreak}
+
+
+\begin{examplebreak}
+    \begin{enumexample}
+        \item Every monoid can be considered a category: This category has a single (arbitrary) object, and its arrows are the elements of the monoid.
+        
+        \item A preordered collected $(M, \leq)$ can also be considered a category. The objects of the category are the elements of $M$, and there is a single arrow $A \to B$ if and only $A \leq B$. Composition is well-defined by transitivity. Notice that there is at most one arrow between two objects, so any two such arrows must be equal.
+    \end{enumexample}
+\end{examplebreak}
+
+
+\begin{definition}[Opposite category]
+    Given a category $\catC$, the \emph{opposite} or \emph{dual} category $\catC^\op$ is the category such that:
+    %
+    \begin{enumdef}
+        \item The objects of $\catC^\op$ are just the objects of $\catC$.
+        
+        \item The arrows are given by $\catC^\op(A,B) = \catC(B,A)$.
+        
+        \item The identity arrows are the same.
+        
+        \item Composition is defined by $f \circ^\op g = g \circ f$.
+    \end{enumdef}
+\end{definition}
+%
+It is clear that $(\catC^\op)^\op = \catC$, so every category is the opposite of some category.
+
+
+
+\chapter{Construction of other categories}
+
+\begin{definition}[Subcategories]
+    Given a category $\catC$, a \emph{subcategory} $\catS$ of $\catC$ consists of some of the objects a...
+
+    Full subcategory
+\end{definition}
+
+
+\begin{definition}[Product categories]
+    x
+\end{definition}
+
+
+\begin{definition}[Quotient categories]
+    Let $\catC$ be a category, and let $\sim$ be a \emph{congruence} on the arrows of $\catC$, i.e., let $\sim$ be an equivalence relation on arrows such that:
+    %
+    \begin{enumdef}
+        \item If $f \sim g$ then $f$ and $g$ have the same source and target.
+        
+        \item If $f \sim g$ then $f \circ h \sim f \circ g$ and $k \circ f \sim k \circ g$.
+    \end{enumdef}
+    %
+    Then $\catC/{\sim}$ is the category whose objects are the same as the objects in $\catC$, and whose arrows are $\sim$-equivalence classes.
+\end{definition}
+
+
+\begin{example}
+    Let $\sim$ be the congruence on the arrows of $\catTop$ that holds between two arrows if they are homotopic. Then $\catTop/{\sim}$ is the homotopy category $\cathTop$.
+\end{example}
+
+
+\begin{definition}[Arrow category]
+    Given a category $\catC$, the \emph{arrow category} $\catC^\to$ is the category with the following data:
+    %
+    \begin{enumdef}
+        \item The objects of $\catC^\to$ are the arrows of $\catC$.
+        
+        \item Given objects $f_1 \colon X_1 \to Y_1$ and $f_2 \colon X_2 \to Y_2$ in $\catC^\to$, an arrow is a pair $(j,k)$ of $\catC$-arrows such that the following diagram commutes:
+        %
+        \begin{equation*}
+            \begin{tikzcd}
+                X_1
+                    \ar[r, "j"]
+                    \ar[d, "f_1", swap]
+                & X_2
+                    \ar[d, "f_2"]
+                \\
+                Y_1
+                    \ar[r, "k"]
+                & Y_2
+            \end{tikzcd}
+        \end{equation*}
+    \end{enumdef}
+    %
+    The identity arrows and composition are defined in the obvious way.
+\end{definition}
+
+
+\begin{definition}[Slice category]
+    Given a category $\catC$ and an object $I$ of $\catC$, the \emph{slice category} over $I$ is the category $\catC/I$ whose objects are $\catC$-arrows $f \colon A \to I$ and whose arrows are commuting triangles in $\catC$.
+
+    The \emph{co-slice category} $I/\catC$ (or the slice category \emph{under} I) is defined dually.
+\end{definition}
+
+
+\begin{examplebreak}
+    \begin{enumexample}
+        \item Pick a one-element set $1$ and consider the co-slice category $1/\catSet$. This is (in a way we make precise later) essentially the same as the category of pointed sets $\catSet_*$. (Reference?)
+        
+        \item Given a (nonempty) set $I$ we can think of the slice category $\catSet/I$ as a category of indexed sets, where the indexes are given by $I$.
+    \end{enumexample}
+\end{examplebreak}
+
+
+
+\chapter{Types of arrows}
+
+\begin{definition}[Monomorphisms and epimorphisms]
+    An arrow $f$ in a category $\catC$ is a \emph{monomorphism} if
+    %
+    \begin{equation*}
+        f \circ g = f \circ h
+            \quad \Rightarrow \quad
+            g = h
+    \end{equation*}
+    %
+    for all appropriate arrows $g, h$. Similarly, $f$ is an \emph{epimorphism} if
+    %
+    \begin{equation*}
+        g \circ f = h \circ f
+            \quad \Rightarrow \quad
+            g = h.
+    \end{equation*}
+\end{definition}
+
+
+\begin{examplebreak}
+    \begin{enumexample}
+        \item In $\catSet$, the monomorphisms are precisely the injective functions, and the epimorphisms are the surjective functions.
+        
+        \item In $\catGrp$, the monomorphisms are similarly the injective homomorphisms (equivalently the homomorphisms with trivial kernel). Surjective homomorphisms are obviously epimorphisms, but the converse is also true.
+        
+        In \cref{exam:equaliser_subgroup} we show that every subgroup of a group is an equaliser subgroup, and the above is an easy corollary: Let $f \colon G \to H$ be an epimorphism in $\catGrp$ (or in $\catFinGrp$, the argument is the same), and put $A = f(G)$. Since $A$ is a subgroup of $H$, there are group homomorphisms $g_1, g_2 \colon H \to K$ (where $K$ is finite if we are working in $\catFinGrp$) such that $A$ is the equaliser subgroup of $g_1$ and $g_2$. But then $g_1 \circ f = g_2 \circ f$, and since $f$ is epic we have $g_1 = g_2$, so the two homomorphisms in fact agree on $H$. Hence $A = H$ and $f$ is surjective.
+
+        \item An arrow that is both a monomorphism and an epimorphism need not be an isomorphism. In $\catMon$, the inclusion arrow $\setN \to \setZ$ is both monic and epic but is clearly not an isomorphism.
+    \end{enumexample}
+\end{examplebreak}
+
+
+% \begin{theorem}
+%     \begin{enumthm}
+%         \item Compositions of monics (epics) are monic (epic).
+        
+%         \item If $f \circ g$ is monic, so is $g$. If $f \circ g$ is epic, so is $f$.
+        
+%         \item If $f$ is monic (epic) and has a right (left) inverse, then $f$ is invertible.
+%     \end{enumthm}
+% \end{theorem}
+
+% \begin{proof}
+%     We prove the third statement. Assume $f \colon A \to B$ is monic and let $g \colon B \to A$ be a right inverse of $f$. Then $f \circ g = 1_B$, and so
+%     %
+%     \begin{equation*}
+%         f \circ (g \circ f)
+%             = (f \circ g) \circ f
+%             = 1_B \circ f
+%             = f \circ 1_A.
+%     \end{equation*}
+%     %
+%     Since $f$ is monic, this implies that $g \circ f = 1_A$, and so $g$ is also a left inverse of $f$, hence a two-sided inverse.
+% \end{proof}
+
+
+% \begin{exercise}
+%     Prove the following statements:
+%     %
+%     \begin{enumexercise}
+%         \item Compositions of monics (epics) are monic (epic).
+        
+%         \item \label{ex:composition_monic_epic} If $f \circ g$ is monic, so is $g$. If $f \circ g$ is epic, so is $f$.
+
+%         \item If $f$ is monic (epic) and has a right (left) inverse, then $f$ is invertible.
+%     \end{enumexercise}
+% \end{exercise}
+
+
+
+
+\chapter{Initial and terminal objects}
+
+\newcommand{\arr}[1]{\vec{#1}}
+
+\begin{definition}[Initial and terminal objects]
+    An object $I$ of a category $\catC$ is \emph{initial} if for every object $X$ there is a unique arrow $I \to X$. If an initial object exist, we often denote it $0$.
+
+    Dually, an object $T$ is \emph{terminal} if for every object $X$ there is a unique arrow $X \to T$. If a terminal object exist, we often denote it $1$.
+
+    An object that is both initial and terminal is called a \emph{null object}.
+\end{definition}
+
+
+\begin{examplebreak}
+    \begin{enumexample}
+        \item A poset $(S, \leq)$ treated as a category has an initial (terminal) object iff it has a minimum (maximum).
+        
+        \item In $\catSet$ the only initial object is the empty set, and every singleton is terminal. Similarly in $\catPoset$ and $\catTop$.
+        
+        \item In the category $\catSet_*$ of pointed sets every singleton is both initial and terminal. Similarly in $\catTop_*$ and in $\catGrp$.
+        
+        \item In the category $\catRing$ of rings, $\setZ$ is initial and the zero ring (where $0 = 1$) is final.
+        
+        \item In a slice category $\catC/X$ the identity arrow $1_X$ is terminal. (What about initials?)
+    \end{enumexample}
+\end{examplebreak}
+
+
+\begin{definition}[Elements of an object]
+    In a category $\catC$ with a terminal object $1$, an \emph{element}, \emph{global element} or \emph{point} of an object $X$ is an arrow $f \colon 1 \to X$.
+
+    In any category, a \emph{generalised element} (of shape $S$) of $X$ is an arrow $e \colon S \to X$.
+\end{definition}
+%
+Note that parallel arrows are equal iff they act identically on all generalised elements. In some categories we don't need to look at all generalised elements to check if two arrows are the same; it is enough to only consider point elements:
+
+\begin{definition}[Well-pointed category]
+    Let $\catC$ be a category with a terminal object $1$. Suppose for any objects $X,Y$ and parallel arrows $f,g \colon X \to Y$ we have that $f = g$ if $f \circ \arr{x} = g \circ \arr{x}$ for all $\arr{x} \colon 1 \to X$. Then $\catC$ is called \emph{well-pointed}.
+\end{definition}
+%
+Note that the choice of terminal object does not matter.
+
+
+\begin{example}
+    The category $\catSet$ of sets is well-pointed, but the category $\catGrp$ of groups is not, since any homomorphism must send the single element of $1$ to the identity, even if $f \neq g$.
+\end{example}
+
+
+% \begin{exercise}
+%     Prove that initial and terminal objects are unique up to unique isomorphism. Furthermore, prove any object isomorphic to an initial (terminal) object is itself initial (terminal).
+% \end{exercise}
+
+
+% \begin{exercise}
+%     Prove that point objects are monic.
+% \end{exercise}
+
+
+
+\chapter{Products and coproducts}
+
+\begin{definition}[Products]
+    In any category $\catC$ a \emph{product} of a class of objects $X_j$ indexed by a collection $J$ of indices is an object $P$ along with projection arrows $\pi_j \colon P \to X_j$, such that for any object $Z$ and arrows $f_j \colon Z \to X_j$ there is a unique arrow $u \colon Z \to P$ such that the diagram
+    %
+    \begin{equation*}
+        \begin{tikzcd}
+            & Z
+                \ar[dl, "f_j", swap]
+                \ar[d, "u", dashed]
+                %\ar[dr, "f_2"]
+            \\
+            X_j
+            & P
+                \ar[l, "\pi_j"]
+                %\ar[r, "\pi_2", swap]
+            %& Y
+        \end{tikzcd}
+    \end{equation*}
+    %
+    commutes for all $j \in J$. The product object $P$ is denoted $\prod_{j \in J} X_j$.
+
+    If the collection of objects consists of two objects $X$ and $Y$, we denote their product $X \times Y$ and the mediating arrow $u$ is denoted $\prodar{f_1}{f_2}$.
+\end{definition}
+%
+Products may also be defined as follows. We consider only binary products for simplicity. Let $X$ and $Y$ be objects in a category $\catC$, and define the \emph{wedge category} $\catC_{W(XY)}$ to be the category whose objects are wedges
+%
+\begin{equation*}
+    \begin{tikzcd}
+        & X
+        \\
+        Z
+            \ar[ur, "f_1"]
+            \ar[dr, "f_2", swap]
+        \\
+        & Y
+    \end{tikzcd}
+\end{equation*}
+%
+and composition of wedges is given by a commutative diagram:
+%
+\begin{equation*}
+    \begin{tikzcd}
+        && X
+        \\
+        Z
+            \ar[urr, "f_1", bend left]
+            \ar[drr, "f_2", bend right, swap]
+            \ar[r, "h"]
+        & W
+            \ar[ur, "g_1"]
+            \ar[dr, "g_2", swap]
+        \\
+        && Y
+    \end{tikzcd}
+\end{equation*}
+%
+A binary product of $X$ and $Y$ in $\catC$ is then a terminal object in $\catC_{W(XY)}$. It follows that binary products are unique up to unique isomorphism in the wedge category, so $P$ is unique up to unique isomorphism if we consider those isomorphisms that commute with the projections.
+
+Given two arrows $f \colon X \to X'$ and $g \colon Y \to Y'$, we define the arrow $f \times g \colon X \times Y \to X' \times Y'$ (assuming the products exist) to be the unique arrow such that the diagram
+%
+\begin{equation*}
+    \begin{tikzcd}
+        X
+            \ar[d, "f", swap]
+        & X \times Y
+            \ar[l, "\pi_1", swap]
+            \ar[r, "\pi_2"]
+            \ar[d, "f \times g"]
+        & Y
+            \ar[d, "g"]
+        \\
+        X'
+        & X' \times Y'
+            \ar[l, "\pi'_1", swap]
+            \ar[r, "\pi'_2"]
+        & Y'
+    \end{tikzcd}
+\end{equation*}
+%
+commutes, i.e. $f \times g = \prodar{f \circ \pi_1}{g \circ \pi_2}$.
+
+
+
+
+\begin{definition}[Small products]
+    A category $\catC$ \emph{has all small products} if for any $\catC$-objects $X_j$ for $j \in J$, where $J$ is some index set, these objects have a product.
+\end{definition}
+
+\begin{remark}
+    To see why this definition of small products is significant, consider the following example: Let $\catC$ be a category with all products, and let $J$ be the class (which might be a set) of arrows in $\catC$. If $\catC$ has two distinct parallel arrows $f,g \colon X \to Y$, then there are at least $2^{\abs{J}}$ arrows $X \to \prod_{j \in J} Y$, which is a contradiction.
+
+    In a category like $\catSet$ whose objects form a proper class, this definition is thus useful.
+\end{remark}
+
+
+\begin{examplebreak}
+    \begin{enumexample}
+        \item In $\catSet$, or in categories of structured sets like $\catGrp$ and $\catTop$, products are the usual product constructions: Cartesian products, direct products and product spaces.
+
+        (It seems like the existence of all small products in $\catSet$, and categories of structured sets, relies on the axiom of choice?)
+        
+        \item Given a first-order language $\calL$, consider the category $\catProp_\calL$ whose objects are wffs of $\calL$, and there is a unique arrow from $X$ to $Y$ if $X$ (semantically) entails $Y$. Then the product of $X$ and $Y$ is the logical product, i.e. the conjunction $X \land Y$, and the projections are obvious by uniqueness of arrows.
+        
+        \item In a poset $(P, \leq)$ considered as a category, the product of two elements $p, q \in P$ is their meet or infimum $p \meet q$. Hence a category need not in general have products, since two elements in a poset need not have a meet.
+        
+        \item The category $\catMeas$ of measurable spaces has all small products.
+        
+        Let $\set{(X_\alpha, \calE_\alpha)}{\alpha \in A}$ be a class of measurable spaces indexed by a set $A$, and equip $X = \prod_{\alpha \in A} X_\alpha$ with the product $\sigma$-algebra $\calE = \bigotimes_{\alpha \in A} \calE_\alpha$. We denote the coordinate projections $\pi_\alpha \colon X \to X_\alpha$.
+    
+        Let $(Y, \calF)$ be a measurable space, and consider for each $\alpha \in A$ a measurable function $f_\alpha \colon Y \to X_\alpha$. Since $X$ is a product in $\catSet$ there is a unique mediating arrow $f \colon Y \to X$, and we only need to show that $f$ is measurable. Considering a generator $\pi_\alpha^{-1}(B)$ of $\calE$ for some $B \in \calE_\alpha$ we then have
+        %
+        \begin{equation*}
+            f^{-1}(\pi_\alpha^{-1}(B))
+                = (\pi_\alpha \circ f)^{-1}(B)
+                = f_\alpha^{-1}(B) \in \calF,
+        \end{equation*}
+        %
+        since $f_\alpha$ is measurable. Thus $f$ is measurable.
+    \end{enumexample}
+\end{examplebreak}
+
+
+\begin{example}
+    Coproducts are defined dually to products. The coproduct of two objects $X$ and $Y$ is denoted $X \coprod Y$.
+    %
+    \begin{enumexample}
+        \item In $\catSet$, coproducts are disjoint unions $X \coprod Y$.
+        
+        \item In $\catGrp$, coproducts are free products $G \freeprod H$. But in the category $\catAb$ of abelian groups, coproducts are direct products, so products and coproducts coincide (or at least the objects do, they are of course equipped with projections or injections as well). When considered as a coproduct, the direct product of abelian groups is often called the \emph{direct sum} and is denoted $G \dirsum H$.
+        
+        \item In $\catProp_\calL$, coproducts are disjunctions $X \lor Y$.
+        
+        \item In a poset $(P, \leq)$, coproducts are joins or suprema, $p \join q$. This again shows that not all categories have all coproducts.
+    \end{enumexample}
+\end{example}
+
+
+\begin{remark}
+    By the following exercise, in a category with a terminal object $1$ we have $1 \times X \cong X$ for any object $X$. If a category has an initial object $0$, we do not necessarily have $0 \times X \cong 0$. For instance, in a category with a null object $0 = 1$ we would then have for all objects $X$,
+    %
+    \begin{equation*}
+        X
+            \cong 1 \times X
+            \cong 0 \times X
+            \cong 0.
+    \end{equation*}
+    %
+    In $\catGrp$ we do have a null object, but not all groups are trivial.
+\end{remark}
+
+
+% \begin{exercisebreak}
+%     \begin{enumexercise}        
+%         \item Assuming that $X \times Y$ exists, prove that $Y \times X$ exists and that $X \times Y \cong Y \times X$.
+
+%         \item \label{exer:1timesXisoX} In a category with a terminal object $1$, prove that $1 \times X$ and $X \times 1$ exist and are isomorphic to $X$.
+%     \end{enumexercise}
+% \end{exercisebreak}
+
+
+% \begin{exercise}
+%     Prove that if
+%     %
+%     \begin{equation*}
+%         \begin{tikzcd}
+%             1
+%             & 1 \times X
+%                 \ar[l, "!_{1 \times X}", swap]
+%                 \ar[r, "i"]
+%             & X
+%         \end{tikzcd}
+%     \end{equation*}
+%     %
+%     is a product, then $i$ is an isomorphism. (Note: From \cref{exer:1timesXisoX} we know that there \emph{exists} an isomorphism $1 \times X \to X$, but there might be other arrows, so this result isn't trivial.)
+% \end{exercise}
+
+
+% \begin{exercise}
+%     Projection arrows are surjective (hence epic) in $\catSet$, but give a counterexample to the general claim that projection arrows are epic in any category. \emph{Hint:} Give a very small counterexample.
+% \end{exercise}
+
+
+% \begin{exercise}
+%     Prove the following claims:
+%     %
+%     \begin{enumexercise}
+%         \item If $\prodar{f_1}{f_2} = \prodar{g_1}{g_2}$, then $f_1 = g_1$ and $f_2 = g_2$. (Note that we have to assume that $\prodar{f_1}{f_2}$ and $\prodar{g_1}{g_2}$ are defined with respect to the same product: Obviously their target, i.e. the product \emph{object}, must be the same for the first equality to make sense, but the \emph{projection arrows} might be different.)
+        
+%         \item Consider a product $[X \times Y, \pi_1, \pi_2]$ and parallel arrows $u,v \colon S \to X \times Y$. If $\pi_i \circ u = \pi_i \circ v$ for $i = 1,2$, then $u = v$.
+        
+%         \item Assuming $\prodar{f}{g}$ and $e$ compose, $\prodar{f}{g} \circ e = \prodar{f \circ e}{g \circ e}$.
+%     \end{enumexercise}
+%     %
+%     In a category where the product $X \times X$ exists, the arrow $\delta_X = \prodar{1_X}{1_X} \colon X \to X \times X$ is called the \emph{diagonal morphism} on $X$.
+%     %
+%     \begin{enumexercise}[resume*]
+%         \item Given an arrow $q \colon S \to X$, we have $\delta_X \circ q = \prodar{q}{q}$.
+
+%         \item $\delta_X$ is a split monomorphism.
+%     \end{enumexercise}
+% \end{exercise}
+
+
+% \begin{exercisebreak}
+%     \begin{enumexercise}
+%         \item Let $f,g \colon X \to Y$, and assume that $X \times X$ and $Y \times Y$ exist. Show that $\prodar{f}{g} = (f \times g) \circ \delta_X$.
+        
+%         \item Assume there are arrows
+%         %
+%         \begin{equation*}
+%             \begin{tikzcd}[row sep=tiny]
+%                 X
+%                     \ar[r, "f"]
+%                 & X'
+%                     \ar[r, "j"]
+%                 & X''
+%                 \\
+%                 Y
+%                     \ar[r, "g"]
+%                 & Y'
+%                     \ar[r, "k"]
+%                 & Y''
+%             \end{tikzcd}
+%         \end{equation*}
+%         %
+%         and assume that the products $X \times Y$, $X' \times Y'$ and $X'' \times Y''$ exist. Show that
+%         %
+%         \begin{equation*}
+%             (j \times k) \circ (f \times g)
+%                 = (j \circ f) \times (k \circ g).
+%         \end{equation*}
+%     \end{enumexercise}
+% \end{exercisebreak}
+
+
+
+
+\chapter{Equalisers and co-equalisers}
+
+In a category $\catC$, a \emph{fork} is a commuting diagram
+%
+\begin{equation*}
+    \begin{tikzcd}
+        S
+            \ar[r, "k"]
+        & X
+            \ar[r, "f", shift left]
+            \ar[r, "g", shift right, swap]
+        & Y
+    \end{tikzcd}
+\end{equation*}
+%
+i.e. $f \circ k = g \circ k$.
+
+
+\begin{definition}[Equalisers]
+    Let $\catC$ be a category and let $f,g \colon X \to Y$ be parallel arrows. The object $E$ and the arrow $e \colon E \to X$ is an \emph{equaliser} for $f$ and $g$ if and only if $f \circ e = g \circ e$ (i.e. they form a fork), and for any fork
+    %
+    \begin{equation*}
+        \begin{tikzcd}
+            S
+                \ar[r, "k"]
+            & X
+                \ar[r, "f", shift left]
+                \ar[r, "g", shift right, swap]
+            & Y
+        \end{tikzcd}
+    \end{equation*}
+    %
+    there is a unique mediating arrow $u \colon S \to E$ such that the following diagram commutes:
+    %
+    \begin{equation*}
+        \begin{tikzcd}[row sep=tiny]
+            S
+                \ar[dr, "k"]
+                \ar[dd, "u", swap, dashed]
+            \\
+            & X
+                \ar[r, "f", shift left]
+                \ar[r, "g", shift right, swap]
+            & Y
+            \\
+            E
+                \ar[ur, "e", swap]
+        \end{tikzcd}
+    \end{equation*}
+\end{definition}
+%
+As with products, we can define a category $\catC_{F(fg)}$ of forks such that equalisers are terminal objects. 
+
+
+\begin{examplebreak}
+    \begin{enumexample}
+        \item In $\catSet$, let $f,g \colon X \to Y$ be a pair of parallel arrows. Let $E = \set{ x \in X }{ f(x) = g(x) }$ be the subset of $X$ on which $f$ and $g$ agree, and let $e \colon E \to X$ be inclusion. Then $[E,e]$ is an equaliser of $f$ and $g$.
+        
+        Conversely, if $S \subseteq X$ is an arbitrary subset, this can also be characterised as an equaliser of two arrows in $\catSet$: Simply take the indicator function of $S$ and a function that is $1$ everywhere.
+
+        \item In categories of structured sets, like $\catMon$ and $\catTop$, there are also equalisers, and they are given similarly as above. In the first case the above subset $E$ of a monoid is also a monoid, and in the second we give $E$ the subspace topology.
+        
+        \item Consider the category $\catGrp$. Let $f \colon X \to Y$ be a group homomorphism, and let $o \colon X \to Y$ send everything to the identity of $Y$ (i.e. $o$ is the unique composite $X \to 1 \to Y$). Now let $K = \ker f$ and let $i \colon K \to X$ be inclusion. Then $f \circ i = o \circ i$, so we have a fork. Given any other fork
+        %
+        \begin{equation*}
+            \begin{tikzcd}
+                S
+                    \ar[r, "k"]
+                & X
+                    \ar[r, "f", shift left]
+                    \ar[r, "o", shift right, swap]
+                & Y
+            \end{tikzcd}
+        \end{equation*}
+        %
+        we have $f \circ k = o \circ k$, so $k(S) \subseteq K$. Then let $k' \colon S \to K$ agree with $k$ on $S$. Then $k'$ makes the diagram
+        %
+        \begin{equation*}
+            \begin{tikzcd}[row sep=tiny]
+                S
+                    \ar[dr, "k"]
+                    \ar[dd, "k'", swap]
+                \\
+                & X
+                    \ar[r, "f", shift left]
+                    \ar[r, "o", shift right, swap]
+                & Y
+                \\
+                K
+                    \ar[ur, "i", swap]
+            \end{tikzcd}
+        \end{equation*}
+        %
+        commute, and $k'$ is unique with this property. Thus $K$ with inclusion is the equaliser of $f$ and $o$, and the kernel of a homomorphism can be described categorically in terms of equalisers.
+
+        This shows that all normal subgroups are equaliser subgroups; hence \emph{all} subgroups in $\catAb$ are also equaliser subgroups.
+
+        More generally, let $\catC$ be a category with a null object $1$, and let $o \colon X \to Y$ be the unique composite $X \to 1 \to Y$ as above. The kernel of an arrow $f \colon X \to Y$ is then (by definition) the equaliser of $f$ and $o$, if it exists. (The existence of a null object is not strictly necessary.)
+
+        \item \label{exam:equaliser_subgroup} In fact, all subgroups in $\catGrp$ are equaliser subgroups. To show this, let $H$ be a subgroup of $G$, and let $K$ be the permutation group of the set $G/H \union \{ \hat H \}$, where $\hat H$ is some element not in $G/H$. Let $\rho \in K$ be the permutation that exchanges $eH$ and $\hat H$ and leaves the rest of the set fixed. Then define maps $f_1, f_2 \colon G \to H$ by
+        %
+        \begin{equation*}
+            f_1(g)(S)
+                =
+                \begin{cases}
+                    gg' H, & S = g' H, \\
+                    \hat H, & S = \hat H,
+                \end{cases}
+        \end{equation*}
+        %
+        for $g \in G$ and $S \in G/H \union \{ \hat H \}$, and $f_2(g) = \rho \circ f_1(g) \circ \rho^{-1}$. Easy (but a bit tedious) calculations show that $f_1$ and $f_2$ are in fact homomorphisms, and that $H$ is the equaliser subgroup of $f_1$ and $f_2$.
+
+        Notice that if $G$ is finite then $K$ is also finite, so this argument shows that the category $\catFinGrp$ of finite groups also has this property.
+
+        \item The category $\catTop_*$ has null objects (one-point spaces), so it also has kernels. The kernel of a map $f \colon (X, x_0) \to (Y, y_0)$ is $(f^{-1}(y_0), x_0)$. As far as I know this has no applications.
+    \end{enumexample}
+\end{examplebreak}
+
+
+% \begin{exercise}
+%     Let $[E, e]$ be an equaliser. Prove the following:
+%     %
+%     \begin{enumexercise}
+%         \item $e$ is a monomorphism.
+        
+%         \item If $e$ is epic, then it is an isomorphism. \emph{Hint:} Show that $e$ is a split epimorphism.
+%     \end{enumexercise}
+% \end{exercise}
+
+Smith doesn't talk much about co-equalisers, so I'll skip them for now.
+
+
+\chapter{Limits and colimits}
+
+\begin{definition}[Diagrams]
+    Given categories $\scatJ$ and $\catC$, we say that a functor $D \colon \scatJ \to \catC$ is a \emph{diagram (of shape $\scatJ$)} in $\catC$.
+\end{definition}
+
+\begin{remark}
+    We use the convention 
+\end{remark}
+
+
+\begin{definition}[Cones]
+    Let $D \colon \scatJ \to \catC$ be a diagram. A \emph{cone over $D$} is an object $C \in \catC$ (the \emph{vertex} or \emph{apex} of the cone) together with an arrow $c_J \colon C \to D(J)$ for each $\scatJ$-object $J$, such that for any $\scatJ$-arrow $d \colon K \to L$, $c_L = D(d) \circ c_K$, i.e. the following diagram commutes:
+    %
+    \begin{equation*}
+        \begin{tikzcd}
+            & C
+                \ar[dl, "c_K", swap]
+                \ar[dr, "c_L"]
+            \\
+            D(K)
+                \ar[rr, "D(d)", swap]
+            & & D(L)
+        \end{tikzcd}
+    \end{equation*}
+    %
+    We write $[C, c_J]$ for such a cone.
+
+    The \emph{category of cones over $D$}, written $\catC_{C(D)}$, has the following data:
+    %
+    \begin{enumdef}
+        \item Its objects are the cones $[C, c_J]$ over $D$.
+        
+        \item An arrow from $[C, c_J]$ to $[C', c'_J]$ is a $\catC$-arrow $f \colon C \to C'$ such that $c'_J \circ f = c_J$ for all $J \in \scatJ$. That is, the triangles
+        %
+        \begin{equation*}
+            \begin{tikzcd}
+                & C
+                    \ar[dl, "c_J", swap]
+                    \ar[d, "f"]
+                \\
+                D(J)
+                & C'
+                    \ar[l, "c'_J"]
+            \end{tikzcd}
+        \end{equation*}
+        %
+        all commute.
+    \end{enumdef}
+    %
+    Composition in $\catC_{C(D)}$ is given by composition in $\catC$.
+\end{definition}
+
+
+\begin{definition}[Limit cones and limits]
+    Given a diagram $D \colon \scatJ \to \catC$, a \emph{limit cone for $D$} in $\catC$ is a terminal object in $\catC_{C(D)}$. We denote the limit object at the vertex of the limit cone by
+    %
+    \begin{equation*}
+        \lim_{\from \scatJ} D.
+    \end{equation*}
+\end{definition}
+%
+We note that limit cones in $\catC_{C(D)}$ are unique up to unique isomorphism, and since isomorphisms in $\catC_{C(D)}$ are just isomorphism in $\catC$ that commute with the cone's arrows, two limit objects are also isomorphic. This isomorphism is not unique in $\catC$ without the requirement that it commutes with the cone's arrows: For instance, it is easy to find non-trivial automorphisms on $X \times Y$ for sets $X$ and $Y$, for instance non-trivial permutations of elements in either set, but these do not commute with the canonical projections.
+
+
+\begin{examplebreak}
+    \begin{enumexample}
+        \item Take the empty diagram in a category $\catC$: A cone over this is a single object without any other conditions, so an arrow between cones is just an arrow $C \to C'$ in $\catC$. Thus the limit object is a terminal object if it exists.
+        
+        \item Consider a diagram with two objects $D_1$ and $D_2$ but no mediating arrows. A cone over this diagram is a wedge, so limit objects are products $D_1 \times D_2$.
+        
+        \item Now consider a diagram with two objects and two parallel arrows between them:
+        %
+        \begin{equation*}
+            \begin{tikzcd}
+                D_1
+                    \ar[r, "d", shift left]
+                    \ar[r, "d'", shift right, swap]
+                & D_2
+            \end{tikzcd}
+        \end{equation*}
+        %
+        A cone over this diagram is a commutative diagram:
+        %
+        \begin{equation*}
+            \begin{tikzcd}
+                & C
+                    \ar[dl, "c_1", swap]
+                    \ar[dr, "c_2"]
+                \\
+                D_1
+                    \ar[rr, "d", shift left]
+                    \ar[rr, "d'", shift right, swap]
+                && D_2
+            \end{tikzcd}
+        \end{equation*}
+        %
+        The commutativity of such a diagram is equivalent to the condition $d \circ c_1 = d' \circ c_1$ since this lets us define $c_2$ as above. So this diagram is equivalent to the fork
+        %
+        \begin{equation*}
+            \begin{tikzcd}
+                C
+                    \ar[r, "c_1"]
+                & D_1
+                    \ar[r, "d", shift left]
+                    \ar[r, "d'", shift right, swap]
+                & D_2
+            \end{tikzcd}
+        \end{equation*}
+        %
+        so the limit is an equaliser of $d$ and $d'$.
+    \end{enumexample}
+\end{examplebreak}
+
+
+\chapter{Pullbacks and pushouts}
+
+\begin{definition}[Pullbacks]
+    A limit for a corner diagram
+    %
+    \begin{equation*}
+        \begin{tikzcd}
+            & D_2
+                \ar[d, "e"]
+            \\
+            D_1
+                \ar[r, "d"]
+            & D_3
+        \end{tikzcd}
+    \end{equation*}
+    %
+    is a \emph{pullback}. A pullback is also called a \emph{fibered product}.
+\end{definition}
+
+
+\begin{examplebreak}
+    \begin{enumexample}
+        \item In $\catSet$, consider the corner:
+        %
+        \begin{equation*}
+            \begin{tikzcd}
+                & Y
+                    \ar[d, "g"]
+                \\
+                X
+                    \ar[r, "f"]
+                & Z
+            \end{tikzcd}
+        \end{equation*}
+        %
+        The limit object must be reminiscent of a product, and to get the rest of the diagram to commute, we must have something like $L = \set{(x,y) \in X \times Y}{f(x) = g(y)}$.
+
+        In particular, if $X, Y \subseteq Z$ and $f$ and $g$ are inclusions, we get the pullback square
+        %
+        \begin{equation*}
+            \begin{tikzcd}
+                L
+                    \ar[r]
+                    \ar[d]
+                & Y
+                    \ar[d, "i_2"]
+                \\
+                X
+                    \ar[r, "i_1"]
+                & Z
+            \end{tikzcd}
+        \end{equation*}
+        %
+        and $L = X \intersect Y$ (up to isomorphism).
+
+        A pullback object looks like an equaliser of a product!
+
+        \item In $\catSet$ we also have the pullback square:
+        %
+        \begin{equation*}
+            \begin{tikzcd}
+                f^{-1}(Z)
+                    \ar[r]
+                    \ar[d]
+                & Z
+                    \ar[d, "1_Z"]
+                \\
+                X
+                    \ar[r, "f"]
+                & Z
+            \end{tikzcd}
+        \end{equation*}
+        %
+        So preimages are also pullback objects, and we get the preimage $f^{-1}(Z)$ by pulling $Z$ back along $f$. Or more precisely, we get the arrow $f^{-1}(Z) \to X$ by pulling the identity $1_Z$ back along $f$.
+    \end{enumexample}
+\end{examplebreak}
+
+
+% \begin{exercisebreak}
+%     \begin{enumexercise}
+%         \item Show that pulling back a monomorphism yields a monomorphism, i.e. show that if
+%         %
+%         \begin{equation*}
+%             \begin{tikzcd}
+%                 L
+%                     \ar[r]
+%                     \ar[d, "a"]
+%                 & Y
+%                     \ar[d, "g", tail]
+%                 \\
+%                 X
+%                     \ar[r]
+%                 & Z
+%             \end{tikzcd}
+%         \end{equation*}
+%         %
+%         is a pullback square with $g$ a monomorphism, then $a$ is also a monomorphism.
+
+%         \item Show that an arrow $f \colon X \to Y$ is a monomorphism if and only if the diagram
+%         %
+%         \begin{equation*}
+%             \begin{tikzcd}
+%                 X
+%                     \ar[r, "1_X"]
+%                     \ar[d, "1_X"]
+%                 & X
+%                     \ar[d, "f"]
+%                 \\
+%                 X
+%                     \ar[r, "f"]
+%                 & Y
+%             \end{tikzcd}
+%         \end{equation*}
+%         %
+%         is a pullback square.
+%     \end{enumexercise}
+% \end{exercisebreak}
+
+% Skipping properties of pullbacks (like monos) and existence of limits for now.
+
+
+\chapter{Subobjects}
+
+There are (at least) two different notions of subobject. The first one is:
+
+\newcommand{\tomonic}{\rightarrowtail}
+
+
+\begin{definition}[Subobjects, first definition]
+    A \emph{subobject-1} of an object $X$ in a category $\catC$ is a monomorphism $S \tomonic X$.
+
+    If $f \colon A \tomonic X$ and $g \colon B \tomonic X$ are subobjects-1 of $X$, then \emph{$f$ is included in $g$}, written $f \subseteq g$, if $f$ factors through $g$, i.e. if there is an arrow $h \colon A \to B$ such that $f = g \circ h$.
+\end{definition}
+
+\begin{remark}
+    It might seem more natural to assume that $h$ is also a monomorphism, but \cref{ex:composition_monic_epic} shows that $h$ is automatically monic since $f$ is monic.
+\end{remark}
+
+
+\begin{examplebreak}
+    \begin{enumexample}
+        \item In $\catSet$, a monomorphism is just an injective function, so a monomorphism $f \colon S \tomonic X$ sets up an isomorphism $S \cong f(S) \subseteq X$. So subobjects-1 in $\catSet$ in some sense correspond to subsets.
+        
+        However, take for instance a singleton $\{1\}$. This has infinitely many subobjects since there are infinitely many singletons in $\catSet$ (indeed there are too many to form a set).
+        
+        \item For two subobjects-1 $f \colon A \tomonic X$ and $g \colon B \tomonic X$, if $f \subseteq g$ and $g \subseteq f$ then it follows from \cref{exer:subobject_isomorphic} that $A \cong B$. But it is easy to find examples, for instance in $\catSet$, of this occuring even when $f \neq g$. In other words, the subobjects-1 of $X$ ordered by inclusion need not form a poset.
+    \end{enumexample}
+\end{examplebreak}
+
+
+\begin{definition}[Subobjects, second definition]
+    A \emph{subobject-2} of an object $X$ in a category $\catC$ is a class of subobjects-1 that factor through each other.
+
+    If $\subobj{f}$ and $\subobj{g}$ are subobjects-2 of $X$, then \emph{$\subobj{f}$ is included in $\subobj{g}$}, written $\subobj{f} \Subset \subobj{g}$, if $f \subseteq g$.
+\end{definition}
+%
+This definition of $\Subset$ is clearly independent of the choice of representatives and makes the class of subobjects-2 of $X$ into a poset.
+
+% Skipping the relation between subobjects, equalisers and pullbacks.
+
+
+% \begin{exercise}
+%     \label{exer:subobject_isomorphic}
+%     Consider the following diagram:
+%     %
+%     \begin{equation*}
+%         \begin{tikzcd}[column sep=small]
+%             X
+%                 \ar[rr, "i", shift left]
+%                 \ar[dr, "f", tail, swap]
+%             && Y
+%                 \ar[ll, "j", shift left]
+%                 \ar[dl, "g", tail]
+%             \\
+%             & Z
+%         \end{tikzcd}
+%     \end{equation*}
+%     %
+%     Assuming that both triangles commute (which means that the monomorphisms $f$ and $g$ factor through each other), show that the whole diagram commutes, i.e. that $i$ and $j$ are isomorphisms and are inverse to each other.
+% \end{exercise}
+
+
+
+\chapter{Exponentials}
+
+\newcommand{\eval}{\mathit{ev}}
+
+\begin{definition}[Exponentials]
+    Let $\catC$ be a category with binary products. An \emph{exponential} of an object $C$ by an object $B$ is given by the pair\footnotemark{} $[C^B, \eval]$, where $C^B$ is an object and $\eval \colon C^B \times B \to C$ an arrow, that satisfies the following property: For every object $A$ and arrow $g \colon A \times B \to C$ in $\catC$ there is a unique arrow $\overline g \colon A \to C^B$ such that the diagram
+    %
+    \begin{equation*}
+        \begin{tikzcd}[row sep=tiny]
+            A \times B
+                \ar[dd, "\overline g \times 1_B", swap, dashed]
+                \ar[dr, "g"]
+            \\
+            & C
+            \\
+            C^B \times B
+                \ar[ur, "\eval", swap]
+        \end{tikzcd}
+    \end{equation*}
+    %
+    commutes. The arrow $\overline g$ is called the \emph{(exponential) transpose} of $g$.
+\end{definition}
+\footnotetext{The square brackets indicate that we are not necessarily thinking of the pair as more than a virtual pair; it is just convenient notation.}
+%
+As with limits we can define a category in which the exponential is a terminal object. Given objects $B$ and $C$ from a category $\catC$, define a category $\catC_{E(B,C)}$ with the following data:
+%
+\begin{enumerate}
+    \item Objects are pairs $[A, g]$, where $A$ is an object $g \colon A \times B \to C$ an arrow in $\catC$.
+
+    \item An arrow from $[A,g]$ to $[A',g']$ is a $\catC$-arrow $h \colon A \to A'$ such that the diagram
+    %
+    \begin{equation*}
+        \begin{tikzcd}[row sep=tiny]
+            A \times B
+                \ar[dd, "h \times 1_B", swap, dashed]
+                \ar[dr, "g"]
+            \\
+            & C
+            \\
+            A' \times B
+                \ar[ur, "g'", swap]
+        \end{tikzcd}
+    \end{equation*}
+    %
+    commutes.
+\end{enumerate}
+%
+Identity arrows and composition are inherited from $\catC$. The exponential $[C^B, \eval]$ is then terminal in this category, and so it is unique up to isomorphism compatible with the evaluation arrows.
+
+Note that an exponential $[C^B, \eval]$ in a category $\catC$ is a limit in the derived category $\catC_{E(B,C)}$ but \emph{not} in $\catC$, since $[C^B, \eval]$ is not even an object in $\catC$.
+
+
+\begin{examplebreak}
+    \begin{enumexample}
+        \item In $\catSet$, the exponential of $C$ by $B$ is the set $C^B$ of functions $B \to C$. The category $\catFinSet$ of finite sets has the same exponentials, since $C^B$ is finite if $B$ and $C$ are.
+        
+        \item However, the category $\catCount$ of \emph{countable} sets does not have all exponentials. The intuition is of course that the exponential $C^B$ in $\catSet$ might not be countable even if $B$ and $C$ are countable.
+        
+        To prove this we use the fact that $\catCount(A \times B, C)$ by \cref{exer:exponential_onetoone} is in one-to-one correspondence with $\catCount(A, C^B)$ if $C^B$ exists. Assume that $C$ has at least two elements, let $B$ be countably infinite, and assume (for convenience) that $A$ is a singleton. Then $\catCount(A \times B, C)$ is in bijection with the (uncountable) set of maps $B \to C$. But $\catCount(A, C^B)$ is in bijection with $C^B$, so $C^B$ must also be uncountable.
+
+        \item In $\catProp_\calL$, the implication $B \to C$ provides an exponential object $C^B$, and the evaluation map $\eval \colon C^B \times B \to C$ reflecting the modus ponens rule, $B \to C, B \vDash C$.
+        
+        Since $A \land B \vDash C$ implies $A \vDash B \to C$, there is a unique arrow from $A$ to $B \to C$. And since trivially $B \vDash B$, we have $A \land B \vDash (B \to C) \land B$. We therefore get the commutative diagram
+        %
+        \begin{equation*}
+            \begin{tikzcd}[row sep=tiny]
+                A \land B
+                    \ar[dd, dashed]
+                    \ar[dr]
+                \\
+                & C
+                \\
+                (B \to C) \land B
+                    \ar[ur]
+            \end{tikzcd}
+        \end{equation*}
+        %
+        where the dashed arrow is the product of the arrows corresponding to the two implications above.
+    \end{enumexample}
+\end{examplebreak}
+
+
+\begin{definition}[Cartesian closed categories]
+    A category $\catC$ is \emph{Cartesian closed} if it has all finite products and all exponentials.
+\end{definition}
+
+
+\begin{examplebreak}
+    \begin{enumexample}
+        \item The categories $\catSet$ and $\catProp_\calL$ are Cartesian closed.
+
+        \item But $\catGrp$ is not Cartesian closed: Recall that $\catGrp$ has a null object, so if it were Cartesian closed, \cref{exer:CCC_all_objects_isomorphic} would imply that all groups were isomorphic, which they are not.
+    \end{enumexample}
+\end{examplebreak}
+
+
+\begin{theorem}
+    If $\catC$ is a Cartesian closed category, then for $A,B,C \in \catC$ we have:
+    %
+    \begin{enumthm}
+        \item If $B \cong C$, then $A^B \cong A^C$.
+        
+        \item $(A^B)^C \cong A^{B \times C}$.
+        
+        \item $(A \times B)^C \cong A^C \times B^C$.
+    \end{enumthm}
+\end{theorem}
+
+\begin{proof}
+    All three claims have elementary proofs, but we give neater proofs once we have developed enough machinery. (Reference later.)
+\end{proof}
+
+
+% \begin{exercise}
+%     Let $\catC$ be a category with a terminal object $1$, and let $B$ and $C$ be objects of $\catC$. Prove the following statements:
+%     %
+%     \begin{enumexercise}
+%         \item The exponential $1^B$ exists and $1^B \cong 1$.
+
+%         \item The exponential $C^1$ exists and $C^1 \cong C$.
+%     \end{enumexercise}
+% \end{exercise}
+
+
+% \begin{exercise}
+%     \label{exer:exponential_onetoone}
+%     Let $\catC$ be a category where the exponential $C^B$ exists. Show that, for every object $A$, $\catC(A \times B, C)$ and $\catC(A, C^B)$ are in one-to-one correspondence. Show the same for $\catC(A \times B, C)$ and $\catC(B, C^A)$.
+
+%     Interpret this result in terms of currying.
+% \end{exercise}
+
+
+% \begin{exercise}
+%     Let $\catC$ be a Cartesian closed category with terminal object $1$, and let $A,B,C \in \catC$. Prove the following statements using \cref{exer:exponential_onetoone}:
+%     %
+%     \begin{enumexercise}
+%         \item $1^B \cong 1$.
+
+%         \item $C^1 \cong C$.
+%     \end{enumexercise}
+%     %
+%     Assume further that $\catC$ has an initial object $0$. Then prove the following:
+%     %
+%     \begin{enumexercise}[resume]
+%         \item $A \times 0 \cong 0$.
+
+%         \item $A^0 \cong 1$.
+
+%         \item If there is an arrow $A \to 0$, then $A \cong 0$.
+
+%         \item \label{exer:CCC_all_objects_isomorphic} There is an arrow $1 \to 0$ if and only if all objects of $\catC$ are isomorphic.
+%     \end{enumexercise}
+% \end{exercise}
+
+
+\chapter{Functors}
+
+\newcommand{\catCatSm}{\ncat{Cat}} % Category of small categories
+\newcommand{\catCatLocSm}{\ncat{Cat}^*} % Category of locally small categories
+\newcommand{\catCatFlex}{\mathbf{C}\textsc{\textbf{at}}} % Flexible category of categories
+\newcommand{\DistTo}{\xrightarrow{
+   \,\smash{\raisebox{-0.65ex}{\ensuremath{\scriptstyle\sim}}}\,}}
+
+\begin{definition}[Functors]
+    Given categories $\catC$ and $\catD$, a \emph{(covariant) functor} $F \colon \catC \to \catD$ consists of the following data:
+    %
+    \begin{enumdef}
+        \item A map of object whose value at the $\catC$-object $A$ is a $\catD$-object $F(A)$.
+
+        \item A map of arrows whose value at the $\catC$-arrow $f \colon A \to B$ is a $\catD$-arrow $F(f) \colon F(A) \to F(B)$.
+    \end{enumdef}
+    %
+    Furthermore, $F$ must preserve identities and respect composition of arrows.
+
+    A functor $F \colon \catC^\op \to \catD$ is called a \emph{contravariant functor} from $\catC$ to $\catD$.
+\end{definition}
+
+
+\begin{remark}
+    Note that functors compose in the obvious way, and we thus get the notion of a category of categories. While a category of all categories may be problematic, we can without issue consider the category $\catCatSm$ of all \emph{small} categories and the category $\catCatLocSm$ of all \emph{locally small} categories.
+
+    But even if the categories we are considering are not locally small, we might still be able to form a category containing them if there are not too many of them. Let us denote such a category by $\catCatFlex$.
+
+    Thus, two categories are isomorphic if they are isomorphic as elements in some category $\catCatFlex$.
+\end{remark}
+
+
+% \begin{exercise}
+%     Show that the categories $\catSet_*$ and $1/\catSet$ are isomorphic.
+% \end{exercise}
+
+
+\begin{examplebreak}[Covariant functors]
+    \begin{enumexample}
+        \item There are many examples of so-called \emph{forgetful} functors that \textquote{forget} (some of) the structure of a category. For instance, there is a forgetful functor $\catMon \to \catSet$ that sends a monoid to its underlying set.
+        
+        Some functors only forget some of the structure, like the functor $\catRing \to \catGrp$ that sends a ring to its underlying additive group, or the functor $\catAb \to \catGrp$ that \textquote{forgets} that a group is abelian.
+
+        \item The powerset functor $P \colon \catSet \to \catSet$ maps a set to its powerset, and maps set functions $f \colon X \to Y$ to the map $U \mapsto f(U)$ for $U \subseteq X$.
+        
+        \item Any homomorphism between monoids or groups is exactly a functor between the corresponding monoids or groups considered as one-object categories.
+        
+        Similarly, a functor between posets considered as categories is just a monotone map.
+    \end{enumexample}
+\end{examplebreak}
+
+\renewcommand{\hom}{\mathbf{Hom}}
+\newcommand{\blank}{-}
+
+\begin{examplebreak}[Contravariant functors]
+    \begin{enumexample}
+        \item There is a contravariant version $\conj P \colon \catSet^\op \to \catSet$ of the powerset functor that sends a function $f \colon X \to Y$ to the map $V \mapsto f^{-1}(V)$ for $V \subseteq Y$.
+    
+        \item Given a field $k$, we denote the category of vector spaces over $k$ by $\catVect_k$. Let $\hom(V,W)$ be the vector space of linear maps $V \to W$. Fix a vector space $W$. We define a functor
+        %
+        \begin{equation*}
+            \hom(\blank,W) \colon \catVect_k^\op \to \catVect_k
+        \end{equation*}
+        %
+        that sends a vector space $V$ to $\hom(V,W)$, and that sends a linear map $f \colon V \to V'$ to the map $f^* \colon \hom(V',W) \to \hom(V,W)$ given by $f^*(g) = g \circ f$.
+        
+        If $W = k$, then this is the dualising functor $(\blank)^* = \hom(\blank,k)$ that sends a vector space to its dual.
+    \end{enumexample}
+\end{examplebreak}
+
+
+\begin{definition}
+    Let $F \colon \catC \to \catD$ be a functor, and let $P$ be some property of arrows. Then:
+    %
+    \begin{enumdef}
+        \item $F$ \emph{preserves} $P$ if, for every $\catC$-arrow $f$, $F(f)$ has the property $P$ if $f$ does.
+
+        \item $F$ \emph{reflects} $P$ if, for every $\catC$-arrow $f$, if $F(f)$ has the property $P$ then so does $f$.
+    \end{enumdef}
+    %
+    A functor is \emph{conservative} if it reflects all isomorphisms.
+\end{definition}
+
+% \begin{exercisebreak}
+%     \begin{enumexercise}
+%         \item Give examples that show that not all functors preserve monomorphisms or epimorphisms.
+
+%         \item Show that functors preserve left and right inverses (and hence isomorphisms). However, give examples that show that these are not necessarily reflected.
+%     \end{enumexercise}
+% \end{exercisebreak}
+
+
+\begin{definition}[Faithfulness and fulness]
+    A functor $F \colon \catC \to \catD$ is \emph{faithful} if for any pair of $\catC$-objects $C, C'$ and arrows $f,g \colon C \to C'$, if $F(f) = F(g)$, then $f = g$.
+
+    $F$ is \emph{full} if for any pair of $\catC$-objects $C,C'$ and arrow $g \colon F(C) \to F(C')$, there is an arrow $f \colon C \to C'$ such that $F(f) = g$.
+
+    If $F$ is both faithful and full, we say that it is \emph{fully faithful}.
+\end{definition}
+%
+Notions of injectivity and surjectivity on objects are less interesting, since we are usually not interested in objects except up to isomorphism. More useful is the following:
+
+\begin{definition}[Essentially surjective]
+    A functor $F \colon \catC \to \catD$ is \emph{essentially surjective on objects} if for any $\catD$-object $D$ there is a $\catC$-object $C$ such that $F(C) \cong D$.
+\end{definition}
+
+\newcommand{\catM}{\cat{M}}
+\newcommand{\catN}{\cat{N}}
+\newcommand{\catOne}{\ncat{1}}
+
+\begin{examplebreak}
+    \begin{enumexample}
+        \item The forgetful functor $F \colon \catMon \to \catSet$ is faithful but not full, since there are many set functions that do not correspond to monoid homomorphisms. (Smith claims it is essentially surjective on objects, but what about the empty set?)
+
+        \item The forgetful functor $F \colon \catAb \to \catSet$ is fully faithful but not essentially surjective on objects.
+
+        \item Let $\catM$ and $\catN$ be the categories corresponding to monoids $M$ and $N$. Let $f \colon M \to N$ be a monoid homomorphism, and let $F \colon \catM \to \catN$ be the corresponding functor. Then $f$ is injective (surjective) iff $F$ is faithful (full).
+
+        \item Consider the \textquote{total collapse} functor $\Delta_0 \colon \catSet \to \catOne$ that sends every object to the sole object of $\catOne$ and all arrows to the identity. Then this is \emph{not} full: Take $C \neq \emptyset$ and $C' = \emptyset$, so there is no arrow $C \to C'$.
+
+        \item An inclusion functor $F \colon \catS \to \catC$ is faithful. If $\catS$ is a full subcategory of $\catC$, then it is also full.
+    \end{enumexample}
+\end{examplebreak}
+
+
+% \begin{exercisebreak}
+%     \begin{enumexercise}
+%         \item Show that a faithful functor reflects monomorphisms and epimorphisms.
+
+%         \item Show that a fully faithful functor reflects right and left inverses and hence is conservative.
+
+%         \item Show that if a functor is an isomorphism, then it is fully faithful.
+%     \end{enumexercise}
+% \end{exercisebreak}
+
+
+
+% \begin{exercisebreak}[The functor $\blank \times C$]
+%     Let $\catC$ be a category with all binary products, and $C$ an object in this category. Show that there is a functor $\blank \times C$ that sends an object $A$ to $A \times C$ and an arrow $f \colon A \to A'$ to $f \times C = f \times 1_C \colon A \times C \to A' \times C$.
+% \end{exercisebreak}
+
+
+% \begin{exercisebreak}[The exponentiation functor $(\blank)^B$]
+%     Let $\catC$ be a category with all exponentials, let $B$ be a $\catC$-object and $f \colon C \to C'$ an arrow, and consider the following diagram:
+%     %
+%     \begin{equation*}
+%         \begin{tikzcd}
+%             C^B \times B
+%                 \ar[r, "\eval"]
+%                 \ar[d, "\conj{(f \circ \eval)} \times 1_B", dashed, swap]
+%             & C
+%                 \ar[d, "f"]
+%             \\
+%             C'^B \times B
+%                 \ar[r, "\eval'", swap]
+%             & C'
+%         \end{tikzcd}
+%     \end{equation*}
+%     %
+%     Show that there is a unique transpose $\conj{f \circ \eval}$ which makes the diagram commute. Show that there is a functor $(\blank)^B \colon \catC \to \catC$ that sends an object $C$ to $C^B$ and an arrow $f \colon C \to C'$ to $f^B = \conj{f \circ \eval} \colon C^B \to C'^B$.
+% \end{exercisebreak}
+
+
+
+\chapter{Functors and limits}
+
+
+
+
+\end{document}
