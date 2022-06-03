@@ -49,11 +49,16 @@
 \usepackage{latex-sty/framedtheorems}
 \usepackage{latex-sty/topologycommands}
 \usepackage{tikz-cd}
+\tikzcdset{arrow style=math font} % https://tex.stackexchange.com/questions/300352/equalities-look-broken-with-tikz-cd-and-math-font
 \usetikzlibrary{babel}
 
 % Lists
 \usepackage{enumitem}
 \setenumerate[0]{label=\normalfont(\arabic*)}
+\setlist{  
+  listparindent=\parindent,
+  parsep=0pt,
+}
 
 % Bibliography
 \usepackage[backend=biber, style=authoryear, maxcitenames=2, useprefix]{biblatex}
@@ -108,12 +113,22 @@
 \usepackage{tikz-cd}
 
 
-% Section style -- add to section style .sty?
-\setsubsecheadstyle{\normalfont\itshape}
+
+\theoremstyle{myexample}
+\newtheorem{exercise}[theorem]{Exercise}
+\theoremstyle{myexamplebreak}
+\newtheorem{exercisebreak}[theorem]{Exercise}
+
+\Crefname{exercise}{Exercise}{Exercises}
+% + exercisebreak? Also example-/remarkbreak? Maybe crefalias
+
+\newcommand{\enumformatnew}{(\alph*)}
+
+\newlist{enumexercise}{enumerate}{1}
+\setlist[enumexercise]{label=\upshape\enumformatnew, ref=\upshape\thetheorem\enumformatnew}
+\crefalias{enumexercisei}{exercise}
 
 
-% Preimage -- to be added to mathcommands .sty
-\newcommand{\preim}{^{-1}}
 
 
 \begin{document}
@@ -312,17 +327,17 @@ It is clear that $(\catC^\op)^\op = \catC$, so every category is the opposite of
 % \end{proof}
 
 
-% \begin{exercise}
-%     Prove the following statements:
-%     %
-%     \begin{enumexercise}
-%         \item Compositions of monics (epics) are monic (epic).
+\begin{exercise}
+    Prove the following statements:
+    %
+    \begin{enumexercise}
+        \item Compositions of monics (epics) are monic (epic).
         
-%         \item \label{ex:composition_monic_epic} If $f \circ g$ is monic, so is $g$. If $f \circ g$ is epic, so is $f$.
+        \item \label{ex:composition_monic_epic} If $f \circ g$ is monic, so is $g$. If $f \circ g$ is epic, so is $f$.
 
-%         \item If $f$ is monic (epic) and has a right (left) inverse, then $f$ is invertible.
-%     \end{enumexercise}
-% \end{exercise}
+        \item If $f$ is monic (epic) and has a right (left) inverse, then $f$ is invertible.
+    \end{enumexercise}
+\end{exercise}
 
 
 
@@ -375,14 +390,14 @@ Note that the choice of terminal object does not matter.
 \end{example}
 
 
-% \begin{exercise}
-%     Prove that initial and terminal objects are unique up to unique isomorphism. Furthermore, prove any object isomorphic to an initial (terminal) object is itself initial (terminal).
-% \end{exercise}
+\begin{exercise}
+    Prove that initial and terminal objects are unique up to unique isomorphism. Furthermore, prove any object isomorphic to an initial (terminal) object is itself initial (terminal).
+\end{exercise}
 
 
-% \begin{exercise}
-%     Prove that point objects are monic.
-% \end{exercise}
+\begin{exercise}
+    Prove that point objects are monic.
+\end{exercise}
 
 
 
@@ -538,88 +553,88 @@ commutes, i.e. $f \times g = \prodar{f \circ \pi_1}{g \circ \pi_2}$.
 \end{remark}
 
 
-% \begin{exercisebreak}
-%     \begin{enumexercise}        
-%         \item Assuming that $X \times Y$ exists, prove that $Y \times X$ exists and that $X \times Y \cong Y \times X$.
+\begin{exercisebreak}
+    \begin{enumexercise}        
+        \item Assuming that $X \times Y$ exists, prove that $Y \times X$ exists and that $X \times Y \cong Y \times X$.
 
-%         \item \label{exer:1timesXisoX} In a category with a terminal object $1$, prove that $1 \times X$ and $X \times 1$ exist and are isomorphic to $X$.
-%     \end{enumexercise}
-% \end{exercisebreak}
-
-
-% \begin{exercise}
-%     Prove that if
-%     %
-%     \begin{equation*}
-%         \begin{tikzcd}
-%             1
-%             & 1 \times X
-%                 \ar[l, "!_{1 \times X}", swap]
-%                 \ar[r, "i"]
-%             & X
-%         \end{tikzcd}
-%     \end{equation*}
-%     %
-%     is a product, then $i$ is an isomorphism. (Note: From \cref{exer:1timesXisoX} we know that there \emph{exists} an isomorphism $1 \times X \to X$, but there might be other arrows, so this result isn't trivial.)
-% \end{exercise}
+        \item \label{exer:1timesXisoX} In a category with a terminal object $1$, prove that $1 \times X$ and $X \times 1$ exist and are isomorphic to $X$.
+    \end{enumexercise}
+\end{exercisebreak}
 
 
-% \begin{exercise}
-%     Projection arrows are surjective (hence epic) in $\catSet$, but give a counterexample to the general claim that projection arrows are epic in any category. \emph{Hint:} Give a very small counterexample.
-% \end{exercise}
+\begin{exercise}
+    Prove that if
+    %
+    \begin{equation*}
+        \begin{tikzcd}
+            1
+            & 1 \times X
+                \ar[l, "!_{1 \times X}", swap]
+                \ar[r, "i"]
+            & X
+        \end{tikzcd}
+    \end{equation*}
+    %
+    is a product, then $i$ is an isomorphism. (Note: From \cref{exer:1timesXisoX} we know that there \emph{exists} an isomorphism $1 \times X \to X$, but there might be other arrows, so this result isn't trivial.)
+\end{exercise}
 
 
-% \begin{exercise}
-%     Prove the following claims:
-%     %
-%     \begin{enumexercise}
-%         \item If $\prodar{f_1}{f_2} = \prodar{g_1}{g_2}$, then $f_1 = g_1$ and $f_2 = g_2$. (Note that we have to assume that $\prodar{f_1}{f_2}$ and $\prodar{g_1}{g_2}$ are defined with respect to the same product: Obviously their target, i.e. the product \emph{object}, must be the same for the first equality to make sense, but the \emph{projection arrows} might be different.)
+\begin{exercise}
+    Projection arrows are surjective (hence epic) in $\catSet$, but give a counterexample to the general claim that projection arrows are epic in any category. \emph{Hint:} Give a very small counterexample.
+\end{exercise}
+
+
+\begin{exercise}
+    Prove the following claims:
+    %
+    \begin{enumexercise}
+        \item If $\prodar{f_1}{f_2} = \prodar{g_1}{g_2}$, then $f_1 = g_1$ and $f_2 = g_2$. (Note that we have to assume that $\prodar{f_1}{f_2}$ and $\prodar{g_1}{g_2}$ are defined with respect to the same product: Obviously their target, i.e. the product \emph{object}, must be the same for the first equality to make sense, but the \emph{projection arrows} might be different.)
         
-%         \item Consider a product $[X \times Y, \pi_1, \pi_2]$ and parallel arrows $u,v \colon S \to X \times Y$. If $\pi_i \circ u = \pi_i \circ v$ for $i = 1,2$, then $u = v$.
+        \item Consider a product $[X \times Y, \pi_1, \pi_2]$ and parallel arrows $u,v \colon S \to X \times Y$. If $\pi_i \circ u = \pi_i \circ v$ for $i = 1,2$, then $u = v$.
         
-%         \item Assuming $\prodar{f}{g}$ and $e$ compose, $\prodar{f}{g} \circ e = \prodar{f \circ e}{g \circ e}$.
-%     \end{enumexercise}
-%     %
-%     In a category where the product $X \times X$ exists, the arrow $\delta_X = \prodar{1_X}{1_X} \colon X \to X \times X$ is called the \emph{diagonal morphism} on $X$.
-%     %
-%     \begin{enumexercise}[resume*]
-%         \item Given an arrow $q \colon S \to X$, we have $\delta_X \circ q = \prodar{q}{q}$.
+        \item Assuming $\prodar{f}{g}$ and $e$ compose, $\prodar{f}{g} \circ e = \prodar{f \circ e}{g \circ e}$.
+    \end{enumexercise}
+    %
+    In a category where the product $X \times X$ exists, the arrow $\delta_X = \prodar{1_X}{1_X} \colon X \to X \times X$ is called the \emph{diagonal morphism} on $X$.
+    %
+    \begin{enumexercise}[resume*]
+        \item Given an arrow $q \colon S \to X$, we have $\delta_X \circ q = \prodar{q}{q}$.
 
-%         \item $\delta_X$ is a split monomorphism.
-%     \end{enumexercise}
-% \end{exercise}
+        \item $\delta_X$ is a split monomorphism.
+    \end{enumexercise}
+\end{exercise}
 
 
-% \begin{exercisebreak}
-%     \begin{enumexercise}
-%         \item Let $f,g \colon X \to Y$, and assume that $X \times X$ and $Y \times Y$ exist. Show that $\prodar{f}{g} = (f \times g) \circ \delta_X$.
+\begin{exercisebreak}
+    \begin{enumexercise}
+        \item Let $f,g \colon X \to Y$, and assume that $X \times X$ and $Y \times Y$ exist. Show that $\prodar{f}{g} = (f \times g) \circ \delta_X$.
         
-%         \item Assume there are arrows
-%         %
-%         \begin{equation*}
-%             \begin{tikzcd}[row sep=tiny]
-%                 X
-%                     \ar[r, "f"]
-%                 & X'
-%                     \ar[r, "j"]
-%                 & X''
-%                 \\
-%                 Y
-%                     \ar[r, "g"]
-%                 & Y'
-%                     \ar[r, "k"]
-%                 & Y''
-%             \end{tikzcd}
-%         \end{equation*}
-%         %
-%         and assume that the products $X \times Y$, $X' \times Y'$ and $X'' \times Y''$ exist. Show that
-%         %
-%         \begin{equation*}
-%             (j \times k) \circ (f \times g)
-%                 = (j \circ f) \times (k \circ g).
-%         \end{equation*}
-%     \end{enumexercise}
-% \end{exercisebreak}
+        \item Assume there are arrows
+        %
+        \begin{equation*}
+            \begin{tikzcd}[row sep=tiny]
+                X
+                    \ar[r, "f"]
+                & X'
+                    \ar[r, "j"]
+                & X''
+                \\
+                Y
+                    \ar[r, "g"]
+                & Y'
+                    \ar[r, "k"]
+                & Y''
+            \end{tikzcd}
+        \end{equation*}
+        %
+        and assume that the products $X \times Y$, $X' \times Y'$ and $X'' \times Y''$ exist. Show that
+        %
+        \begin{equation*}
+            (j \times k) \circ (f \times g)
+                = (j \circ f) \times (k \circ g).
+        \end{equation*}
+    \end{enumexercise}
+\end{exercisebreak}
 
 
 
@@ -743,15 +758,15 @@ As with products, we can define a category $\catC_{F(fg)}$ of forks such that eq
 \end{examplebreak}
 
 
-% \begin{exercise}
-%     Let $[E, e]$ be an equaliser. Prove the following:
-%     %
-%     \begin{enumexercise}
-%         \item $e$ is a monomorphism.
+\begin{exercise}
+    Let $[E, e]$ be an equaliser. Prove the following:
+    %
+    \begin{enumexercise}
+        \item $e$ is a monomorphism.
         
-%         \item If $e$ is epic, then it is an isomorphism. \emph{Hint:} Show that $e$ is a split epimorphism.
-%     \end{enumexercise}
-% \end{exercise}
+        \item If $e$ is epic, then it is an isomorphism. \emph{Hint:} Show that $e$ is a split epimorphism.
+    \end{enumexercise}
+\end{exercise}
 
 Smith doesn't talk much about co-equalisers, so I'll skip them for now.
 
@@ -928,15 +943,15 @@ We note that limit cones in $\catC_{C(D)}$ are unique up to unique isomorphism, 
 
         A pullback object looks like an equaliser of a product!
 
-        \item In $\catSet$ we also have the pullback square:
+        \item If $A \subseteq Z$ and $i \colon A \to Z$ is the inclusion map, then in $\catSet$ we also have the pullback square:
         %
         \begin{equation*}
             \begin{tikzcd}
-                f^{-1}(Z)
+                f^{-1}(A)
                     \ar[r]
                     \ar[d]
-                & Z
-                    \ar[d, "1_Z"]
+                & A
+                    \ar[d, "i", hook]
                 \\
                 X
                     \ar[r, "f"]
@@ -944,50 +959,50 @@ We note that limit cones in $\catC_{C(D)}$ are unique up to unique isomorphism, 
             \end{tikzcd}
         \end{equation*}
         %
-        So preimages are also pullback objects, and we get the preimage $f^{-1}(Z)$ by pulling $Z$ back along $f$. Or more precisely, we get the arrow $f^{-1}(Z) \to X$ by pulling the identity $1_Z$ back along $f$.
+        So preimages are also pullback objects, and we get the preimage $f^{-1}(A)$ by pulling $A$ back along $f$. Or more precisely, we get the arrow $f^{-1}(A) \to X$ by pulling the inclusion $i$ back along $f$.
     \end{enumexample}
 \end{examplebreak}
 
 
-% \begin{exercisebreak}
-%     \begin{enumexercise}
-%         \item Show that pulling back a monomorphism yields a monomorphism, i.e. show that if
-%         %
-%         \begin{equation*}
-%             \begin{tikzcd}
-%                 L
-%                     \ar[r]
-%                     \ar[d, "a"]
-%                 & Y
-%                     \ar[d, "g", tail]
-%                 \\
-%                 X
-%                     \ar[r]
-%                 & Z
-%             \end{tikzcd}
-%         \end{equation*}
-%         %
-%         is a pullback square with $g$ a monomorphism, then $a$ is also a monomorphism.
+\begin{exercisebreak}
+    \begin{enumexercise}
+        \item Show that pulling back a monomorphism yields a monomorphism, i.e. show that if
+        %
+        \begin{equation*}
+            \begin{tikzcd}
+                L
+                    \ar[r]
+                    \ar[d, "a"]
+                & Y
+                    \ar[d, "g", tail]
+                \\
+                X
+                    \ar[r]
+                & Z
+            \end{tikzcd}
+        \end{equation*}
+        %
+        is a pullback square with $g$ a monomorphism, then $a$ is also a monomorphism.
 
-%         \item Show that an arrow $f \colon X \to Y$ is a monomorphism if and only if the diagram
-%         %
-%         \begin{equation*}
-%             \begin{tikzcd}
-%                 X
-%                     \ar[r, "1_X"]
-%                     \ar[d, "1_X"]
-%                 & X
-%                     \ar[d, "f"]
-%                 \\
-%                 X
-%                     \ar[r, "f"]
-%                 & Y
-%             \end{tikzcd}
-%         \end{equation*}
-%         %
-%         is a pullback square.
-%     \end{enumexercise}
-% \end{exercisebreak}
+        \item Show that an arrow $f \colon X \to Y$ is a monomorphism if and only if the diagram
+        %
+        \begin{equation*}
+            \begin{tikzcd}
+                X
+                    \ar[r, "1_X"]
+                    \ar[d, "1_X"]
+                & X
+                    \ar[d, "f"]
+                \\
+                X
+                    \ar[r, "f"]
+                & Y
+            \end{tikzcd}
+        \end{equation*}
+        %
+        is a pullback square.
+    \end{enumexercise}
+\end{exercisebreak}
 
 % Skipping properties of pullbacks (like monos) and existence of limits for now.
 
@@ -1009,7 +1024,6 @@ There are (at least) two different notions of subobject. The first one is:
     It might seem more natural to assume that $h$ is also a monomorphism, but \cref{ex:composition_monic_epic} shows that $h$ is automatically monic since $f$ is monic.
 \end{remark}
 
-
 \begin{examplebreak}
     \begin{enumexample}
         \item In $\catSet$, a monomorphism is just an injective function, so a monomorphism $f \colon S \tomonic X$ sets up an isomorphism $S \cong f(S) \subseteq X$. So subobjects-1 in $\catSet$ in some sense correspond to subsets.
@@ -1017,6 +1031,43 @@ There are (at least) two different notions of subobject. The first one is:
         However, take for instance a singleton $\{1\}$. This has infinitely many subobjects since there are infinitely many singletons in $\catSet$ (indeed there are too many to form a set).
         
         \item For two subobjects-1 $f \colon A \tomonic X$ and $g \colon B \tomonic X$, if $f \subseteq g$ and $g \subseteq f$ then it follows from \cref{exer:subobject_isomorphic} that $A \cong B$. But it is easy to find examples, for instance in $\catSet$, of this occuring even when $f \neq g$. In other words, the subobjects-1 of $X$ ordered by inclusion need not form a poset.
+
+        \item Let $S_1 \tomonic X$ and $S_2 \tomonic X$ be subobjects-1, and consider the pullback
+        %
+        \begin{equation*}
+            \begin{tikzcd}
+                L
+                    \ar[r]
+                    \ar[d]
+                & S_2
+                    \ar[d, tail]
+                \\
+                S_1
+                    \ar[r, tail]
+                & X
+            \end{tikzcd}
+        \end{equation*}
+        %
+        if it exists. Then [ref] shows that the arrows $L \to S_1$ and $L \to S_2$ are also monic, so $L$ is a subobject of both $S_1$ and $S_2$, in particular also of $X$. Inspired by [ref] we may consider $L$ a sort of intersection of $S_1$ and $S_2$ (or more precisely, the arrows $L \tomonic S_1$ and $L \tomonic S_2$ can together be considered an intersection of $S_1 \tomonic X$ and $S_2 \tomonic X$).
+
+
+        \item If $S \tomonic Z$ is a subobject-1, consider the pullback
+        %
+        \begin{equation*}
+            \begin{tikzcd}
+                L
+                    \ar[r]
+                    \ar[d]
+                & S
+                    \ar[d, tail]
+                \\
+                X
+                    \ar[r, "f"]
+                & Z
+            \end{tikzcd}
+        \end{equation*}
+        %
+        if it exists. Then the arrow $L \tomonic X$ is also monic, hence a subobject-1 of $X$. In comparison with [ref], we may thus consider $L$ as a sort of preimage of $S$ under $f$.
     \end{enumexample}
 \end{examplebreak}
 
@@ -1032,25 +1083,27 @@ This definition of $\Subset$ is clearly independent of the choice of representat
 % Skipping the relation between subobjects, equalisers and pullbacks.
 
 
-% \begin{exercise}
-%     \label{exer:subobject_isomorphic}
-%     Consider the following diagram:
-%     %
-%     \begin{equation*}
-%         \begin{tikzcd}[column sep=small]
-%             X
-%                 \ar[rr, "i", shift left]
-%                 \ar[dr, "f", tail, swap]
-%             && Y
-%                 \ar[ll, "j", shift left]
-%                 \ar[dl, "g", tail]
-%             \\
-%             & Z
-%         \end{tikzcd}
-%     \end{equation*}
-%     %
-%     Assuming that both triangles commute (which means that the monomorphisms $f$ and $g$ factor through each other), show that the whole diagram commutes, i.e. that $i$ and $j$ are isomorphisms and are inverse to each other.
-% \end{exercise}
+\begin{exercise}
+    \label{exer:subobject_isomorphic}
+    Consider the following diagram:
+    %
+    \begin{equation*}
+        \begin{tikzcd}[column sep=small]
+            X
+                \ar[rr, "i", shift left]
+                \ar[dr, "f", tail, swap]
+            && Y
+                \ar[ll, "j", shift left]
+                \ar[dl, "g", tail]
+            \\
+            & Z
+        \end{tikzcd}
+    \end{equation*}
+    %
+    Assuming that both triangles commute (which means that the monomorphisms $f$ and $g$ factor through each other), show that the whole diagram commutes, i.e. that $i$ and $j$ are isomorphisms and are inverse to each other.
+
+    In particular, two subobjects-1 that factor through each other are isomorphic, and hence all elements of a subobject-2 are isomorphic.
+\end{exercise}
 
 
 
@@ -1167,46 +1220,46 @@ Note that an exponential $[C^B, \eval]$ in a category $\catC$ is a limit in the 
 \end{proof}
 
 
-% \begin{exercise}
-%     Let $\catC$ be a category with a terminal object $1$, and let $B$ and $C$ be objects of $\catC$. Prove the following statements:
-%     %
-%     \begin{enumexercise}
-%         \item The exponential $1^B$ exists and $1^B \cong 1$.
+\begin{exercise}
+    Let $\catC$ be a category with a terminal object $1$, and let $B$ and $C$ be objects of $\catC$. Prove the following statements:
+    %
+    \begin{enumexercise}
+        \item The exponential $1^B$ exists and $1^B \cong 1$.
 
-%         \item The exponential $C^1$ exists and $C^1 \cong C$.
-%     \end{enumexercise}
-% \end{exercise}
-
-
-% \begin{exercise}
-%     \label{exer:exponential_onetoone}
-%     Let $\catC$ be a category where the exponential $C^B$ exists. Show that, for every object $A$, $\catC(A \times B, C)$ and $\catC(A, C^B)$ are in one-to-one correspondence. Show the same for $\catC(A \times B, C)$ and $\catC(B, C^A)$.
-
-%     Interpret this result in terms of currying.
-% \end{exercise}
+        \item The exponential $C^1$ exists and $C^1 \cong C$.
+    \end{enumexercise}
+\end{exercise}
 
 
-% \begin{exercise}
-%     Let $\catC$ be a Cartesian closed category with terminal object $1$, and let $A,B,C \in \catC$. Prove the following statements using \cref{exer:exponential_onetoone}:
-%     %
-%     \begin{enumexercise}
-%         \item $1^B \cong 1$.
+\begin{exercise}
+    \label{exer:exponential_onetoone}
+    Let $\catC$ be a category where the exponential $C^B$ exists. Show that, for every object $A$, $\catC(A \times B, C)$ and $\catC(A, C^B)$ are in one-to-one correspondence. Show the same for $\catC(A \times B, C)$ and $\catC(B, C^A)$.
 
-%         \item $C^1 \cong C$.
-%     \end{enumexercise}
-%     %
-%     Assume further that $\catC$ has an initial object $0$. Then prove the following:
-%     %
-%     \begin{enumexercise}[resume]
-%         \item $A \times 0 \cong 0$.
+    Interpret this result in terms of currying.
+\end{exercise}
 
-%         \item $A^0 \cong 1$.
 
-%         \item If there is an arrow $A \to 0$, then $A \cong 0$.
+\begin{exercise}
+    Let $\catC$ be a Cartesian closed category with terminal object $1$, and let $A,B,C \in \catC$. Prove the following statements using \cref{exer:exponential_onetoone}:
+    %
+    \begin{enumexercise}
+        \item $1^B \cong 1$.
 
-%         \item \label{exer:CCC_all_objects_isomorphic} There is an arrow $1 \to 0$ if and only if all objects of $\catC$ are isomorphic.
-%     \end{enumexercise}
-% \end{exercise}
+        \item $C^1 \cong C$.
+    \end{enumexercise}
+    %
+    Assume further that $\catC$ has an initial object $0$. Then prove the following:
+    %
+    \begin{enumexercise}[resume]
+        \item $A \times 0 \cong 0$.
+
+        \item $A^0 \cong 1$.
+
+        \item If there is an arrow $A \to 0$, then $A \cong 0$.
+
+        \item \label{exer:CCC_all_objects_isomorphic} There is an arrow $1 \to 0$ if and only if all objects of $\catC$ are isomorphic.
+    \end{enumexercise}
+\end{exercise}
 
 
 \chapter{Functors}
@@ -1241,9 +1294,9 @@ Note that an exponential $[C^B, \eval]$ in a category $\catC$ is a limit in the 
 \end{remark}
 
 
-% \begin{exercise}
-%     Show that the categories $\catSet_*$ and $1/\catSet$ are isomorphic.
-% \end{exercise}
+\begin{exercise}
+    Show that the categories $\catSet_*$ and $1/\catSet$ are isomorphic.
+\end{exercise}
 
 
 \begin{examplebreak}[Covariant functors]
@@ -1292,13 +1345,13 @@ Note that an exponential $[C^B, \eval]$ in a category $\catC$ is a limit in the 
     A functor is \emph{conservative} if it reflects all isomorphisms.
 \end{definition}
 
-% \begin{exercisebreak}
-%     \begin{enumexercise}
-%         \item Give examples that show that not all functors preserve monomorphisms or epimorphisms.
+\begin{exercisebreak}
+    \begin{enumexercise}
+        \item Give examples that show that not all functors preserve monomorphisms or epimorphisms.
 
-%         \item Show that functors preserve left and right inverses (and hence isomorphisms). However, give examples that show that these are not necessarily reflected.
-%     \end{enumexercise}
-% \end{exercisebreak}
+        \item Show that functors preserve left and right inverses (and hence isomorphisms). However, give examples that show that these are not necessarily reflected.
+    \end{enumexercise}
+\end{exercisebreak}
 
 
 \begin{definition}[Faithfulness and fulness]
@@ -1334,42 +1387,42 @@ Notions of injectivity and surjectivity on objects are less interesting, since w
 \end{examplebreak}
 
 
-% \begin{exercisebreak}
-%     \begin{enumexercise}
-%         \item Show that a faithful functor reflects monomorphisms and epimorphisms.
+\begin{exercisebreak}
+    \begin{enumexercise}
+        \item Show that a faithful functor reflects monomorphisms and epimorphisms.
 
-%         \item Show that a fully faithful functor reflects right and left inverses and hence is conservative.
+        \item Show that a fully faithful functor reflects right and left inverses and hence is conservative.
 
-%         \item Show that if a functor is an isomorphism, then it is fully faithful.
-%     \end{enumexercise}
-% \end{exercisebreak}
-
-
-
-% \begin{exercisebreak}[The functor $\blank \times C$]
-%     Let $\catC$ be a category with all binary products, and $C$ an object in this category. Show that there is a functor $\blank \times C$ that sends an object $A$ to $A \times C$ and an arrow $f \colon A \to A'$ to $f \times C = f \times 1_C \colon A \times C \to A' \times C$.
-% \end{exercisebreak}
+        \item Show that if a functor is an isomorphism, then it is fully faithful.
+    \end{enumexercise}
+\end{exercisebreak}
 
 
-% \begin{exercisebreak}[The exponentiation functor $(\blank)^B$]
-%     Let $\catC$ be a category with all exponentials, let $B$ be a $\catC$-object and $f \colon C \to C'$ an arrow, and consider the following diagram:
-%     %
-%     \begin{equation*}
-%         \begin{tikzcd}
-%             C^B \times B
-%                 \ar[r, "\eval"]
-%                 \ar[d, "\conj{(f \circ \eval)} \times 1_B", dashed, swap]
-%             & C
-%                 \ar[d, "f"]
-%             \\
-%             C'^B \times B
-%                 \ar[r, "\eval'", swap]
-%             & C'
-%         \end{tikzcd}
-%     \end{equation*}
-%     %
-%     Show that there is a unique transpose $\conj{f \circ \eval}$ which makes the diagram commute. Show that there is a functor $(\blank)^B \colon \catC \to \catC$ that sends an object $C$ to $C^B$ and an arrow $f \colon C \to C'$ to $f^B = \conj{f \circ \eval} \colon C^B \to C'^B$.
-% \end{exercisebreak}
+
+\begin{exercisebreak}[The functor $\blank \times C$]
+    Let $\catC$ be a category with all binary products, and $C$ an object in this category. Show that there is a functor $\blank \times C$ that sends an object $A$ to $A \times C$ and an arrow $f \colon A \to A'$ to $f \times C = f \times 1_C \colon A \times C \to A' \times C$.
+\end{exercisebreak}
+
+
+\begin{exercisebreak}[The exponentiation functor $(\blank)^B$]
+    Let $\catC$ be a category with all exponentials, let $B$ be a $\catC$-object and $f \colon C \to C'$ an arrow, and consider the following diagram:
+    %
+    \begin{equation*}
+        \begin{tikzcd}
+            C^B \times B
+                \ar[r, "\eval"]
+                \ar[d, "\conj{(f \circ \eval)} \times 1_B", dashed, swap]
+            & C
+                \ar[d, "f"]
+            \\
+            C'^B \times B
+                \ar[r, "\eval'", swap]
+            & C'
+        \end{tikzcd}
+    \end{equation*}
+    %
+    Show that there is a unique transpose $\conj{f \circ \eval}$ which makes the diagram commute. Show that there is a functor $(\blank)^B \colon \catC \to \catC$ that sends an object $C$ to $C^B$ and an arrow $f \colon C \to C'$ to $f^B = \conj{f \circ \eval} \colon C^B \to C'^B$.
+\end{exercisebreak}
 
 
 
