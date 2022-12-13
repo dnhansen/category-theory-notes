@@ -17,13 +17,13 @@
 \usepackage{latex-sty/articlesectionstyle}
 
 % Fonts
+\usepackage{amssymb}
 \usepackage[largesmallcaps]{kpfonts}
 \DeclareSymbolFontAlphabet{\mathrm}{operators} % https://tex.stackexchange.com/questions/40874/kpfonts-siunitx-and-math-alphabets
 \linespread{1.06}
 \let\mathfrak\undefined
 \usepackage{eufrak}
 \usepackage{inconsolata}
-\usepackage{amssymb}
 
 % Hyperlinks
 \usepackage{hyperref}
@@ -102,7 +102,7 @@
 \newcommand{\op}{\mathrm{op}}
 \let\oldcoprod\coprod
 \newcommand{\bigcoprod}{\oldcoprod}
-\renewcommand{\coprod}{\amalg}
+\renewcommand{\coprod}{\sqcup}
 \newcommand{\freeprod}{*} % Or \star
 \newcommand{\dirsum}{\oplus}
 \newcommand{\from}{\leftarrow}
@@ -115,6 +115,7 @@
 
 
 \theoremstyle{myexample}
+\theoremsymbol{}
 \newtheorem{exercise}[theorem]{Exercise}
 \theoremstyle{myexamplebreak}
 \newtheorem{exercisebreak}[theorem]{Exercise}
@@ -128,7 +129,9 @@
 \setlist[enumexercise]{label=\upshape\enumformatnew, ref=\upshape\thetheorem\enumformatnew}
 \crefalias{enumexercisei}{exercise}
 
-
+% Break
+\usepackage{adforn}
+\newcommand\fleuronbreak{\fancybreak{\textcolor{linkcolor}{\adfhangingflatleafleft}}}
 
 
 \begin{document}
@@ -298,7 +301,7 @@ It is clear that $(\catC^\op)^\op = \catC$, so every category is the opposite of
         
         In \cref{exam:equaliser_subgroup} we show that every subgroup of a group is an equaliser subgroup, and the above is an easy corollary: Let $f \colon G \to H$ be an epimorphism in $\catGrp$ (or in $\catFinGrp$, the argument is the same), and put $A = f(G)$. Since $A$ is a subgroup of $H$, there are group homomorphisms $g_1, g_2 \colon H \to K$ (where $K$ is finite if we are working in $\catFinGrp$) such that $A$ is the equaliser subgroup of $g_1$ and $g_2$. But then $g_1 \circ f = g_2 \circ f$, and since $f$ is epic we have $g_1 = g_2$, so the two homomorphisms in fact agree on $H$. Hence $A = H$ and $f$ is surjective.
 
-        \item An arrow that is both a monomorphism and an epimorphism need not be an isomorphism. In $\catMon$, the inclusion arrow $\setN \to \setZ$ is both monic and epic but is clearly not an isomorphism.
+        \item An arrow that is both a monomorphism and an epimorphism need not be an isomorphism. In $\catMon$, the inclusion arrow $\naturals \to \ints$ is both monic and epic but is clearly not an isomorphism.
     \end{enumexample}
 \end{examplebreak}
 
@@ -363,7 +366,7 @@ It is clear that $(\catC^\op)^\op = \catC$, so every category is the opposite of
         
         \item In the category $\catSet_*$ of pointed sets every singleton is both initial and terminal. Similarly in $\catTop_*$ and in $\catGrp$.
         
-        \item In the category $\catRing$ of rings, $\setZ$ is initial and the zero ring (where $0 = 1$) is final.
+        \item In the category $\catRing$ of rings, $\ints$ is initial and the zero ring (where $0 = 1$) is final.
         
         \item In a slice category $\catC/X$ the identity arrow $1_X$ is terminal. (What about initials?)
     \end{enumexample}
@@ -404,24 +407,24 @@ Note that the choice of terminal object does not matter.
 \chapter{Products and coproducts}
 
 \begin{definition}[Products]
-    In any category $\catC$ a \emph{product} of a class of objects $X_j$ indexed by a collection $J$ of indices is an object $P$ along with projection arrows $\pi_j \colon P \to X_j$, such that for any object $Z$ and arrows $f_j \colon Z \to X_j$ there is a unique arrow $u \colon Z \to P$ such that the diagram
+    In any category $\catC$ a \emph{product} of a class of objects $X_\alpha$ indexed by a collection $A$ of indices is an object $P$ along with projection arrows $\pi_\alpha \colon P \to X_\alpha$, such that for any object $Z$ and arrows $f_\alpha \colon Z \to X_\alpha$ there is a unique arrow $u \colon Z \to P$ such that the diagram
     %
     \begin{equation*}
         \begin{tikzcd}
             & Z
-                \ar[dl, "f_j", swap]
+                \ar[dl, "f_\alpha", swap]
                 \ar[d, "u", dashed]
                 %\ar[dr, "f_2"]
             \\
-            X_j
+            X_\alpha
             & P
-                \ar[l, "\pi_j"]
+                \ar[l, "\pi_\alpha"]
                 %\ar[r, "\pi_2", swap]
             %& Y
         \end{tikzcd}
     \end{equation*}
     %
-    commutes for all $j \in J$. The product object $P$ is denoted $\prod_{j \in J} X_j$.
+    commutes for all $\alpha \in A$. The product object $P$ is denoted $\bigprod_{\alpha \in A} X_\alpha$, and the arrow $u$ is denoted $\langle f_\alpha \rangle_{\alpha \in A}$.
 
     If the collection of objects consists of two objects $X$ and $Y$, we denote their product $X \times Y$ and the mediating arrow $u$ is denoted $\prodar{f_1}{f_2}$.
 \end{definition}
@@ -483,6 +486,15 @@ Given two arrows $f \colon X \to X'$ and $g \colon Y \to Y'$, we define the arro
 %
 commutes, i.e. $f \times g = \prodar{f \circ \pi_1}{g \circ \pi_2}$.
 
+More generally, given maps $f_\alpha \colon X_\alpha \to Y_\alpha$ there is a unique map
+%
+\begin{equation*}
+    \bigprod_{\alpha \in A} f_\alpha
+        \colon \bigprod_{\alpha \in A} X_\alpha
+        \to \bigprod_{\alpha \in A} Y_\alpha
+\end{equation*}
+%
+such that $\pi_{Y_\alpha} \circ \bigprod_{\alpha \in A} f_\alpha = f_\alpha \circ \pi_{X_\alpha}$, if the product objects exist. That is, such that $\bigprod_{\alpha \in A} f_\alpha = \langle f_\alpha \circ \pi_{X_\alpha} \rangle_{\alpha \in A}$.
 
 
 
@@ -491,7 +503,7 @@ commutes, i.e. $f \times g = \prodar{f \circ \pi_1}{g \circ \pi_2}$.
 \end{definition}
 
 \begin{remark}
-    To see why this definition of small products is significant, consider the following example: Let $\catC$ be a category with all products, and let $J$ be the class (which might be a set) of arrows in $\catC$. If $\catC$ has two distinct parallel arrows $f,g \colon X \to Y$, then there are at least $2^{\abs{J}}$ arrows $X \to \prod_{j \in J} Y$, which is a contradiction.
+    To see why this definition of small products is significant, consider the following example: Let $\catC$ be a category with all products, and let $J$ be the class (which might be a set) of arrows in $\catC$. If $\catC$ has two distinct parallel arrows $f,g \colon X \to Y$, then there are at least $2^{\abs{J}}$ arrows $X \to \bigprod_{j \in J} Y$, which is a contradiction.
 
     In a category like $\catSet$ whose objects form a proper class, this definition is thus useful.
 \end{remark}
@@ -509,7 +521,7 @@ commutes, i.e. $f \times g = \prodar{f \circ \pi_1}{g \circ \pi_2}$.
         
         \item The category $\catMeas$ of measurable spaces has all small products.
         
-        Let $\set{(X_\alpha, \calE_\alpha)}{\alpha \in A}$ be a class of measurable spaces indexed by a set $A$, and equip $X = \prod_{\alpha \in A} X_\alpha$ with the product $\sigma$-algebra $\calE = \bigotimes_{\alpha \in A} \calE_\alpha$. We denote the coordinate projections $\pi_\alpha \colon X \to X_\alpha$.
+        Let $\set{(X_\alpha, \calE_\alpha)}{\alpha \in A}$ be a class of measurable spaces indexed by a set $A$, and equip $X = \bigprod_{\alpha \in A} X_\alpha$ with the product $\sigma$-algebra $\calE = \bigotimes_{\alpha \in A} \calE_\alpha$. We denote the coordinate projections $\pi_\alpha \colon X \to X_\alpha$.
     
         Let $(Y, \calF)$ be a measurable space, and consider for each $\alpha \in A$ a measurable function $f_\alpha \colon Y \to X_\alpha$. Since $X$ is a product in $\catSet$ there is a unique mediating arrow $f \colon Y \to X$, and we only need to show that $f$ is measurable. Considering a generator $\pi_\alpha^{-1}(B)$ of $\calE$ for some $B \in \calE_\alpha$ we then have
         %
@@ -523,10 +535,21 @@ commutes, i.e. $f \times g = \prodar{f \circ \pi_1}{g \circ \pi_2}$.
     \end{enumexample}
 \end{examplebreak}
 
+\fleuronbreak
 
-\begin{example}
-    Coproducts are defined dually to products. The coproduct of two objects $X$ and $Y$ is denoted $X \coprod Y$.
-    %
+Coproducts are defined dually to products. The coproduct of a collection of objects $X_\alpha$ indexed by $A$ is denoted $\bigcoprod_{\alpha \in A} X_\alpha$. If $f_\alpha \colon X_\alpha \to Z$ are arrows, then the mediating arrow is denoted $[f_\alpha]_{\alpha \in A}$. The coproduct of two objects $X$ and $Y$ is denoted $X \coprod Y$, and the mediating arrow is denoted $[f_1, f_2]$.
+
+Just as with products, for arrows $f_\alpha \colon X_\alpha \to Y_\alpha$ there is an arrow
+%
+\begin{equation*}
+    \bigcoprod_{\alpha \in A} f_\alpha
+        \colon \bigcoprod_{\alpha \in A} X_\alpha
+        \to \bigcoprod_{\alpha \in A} Y_\alpha,
+\end{equation*}
+%
+which we denote $f_1 \coprod f_2$ in the case of two maps.
+
+\begin{examplebreak}
     \begin{enumexample}
         \item In $\catSet$, coproducts are disjoint unions $X \coprod Y$.
         
@@ -536,7 +559,7 @@ commutes, i.e. $f \times g = \prodar{f \circ \pi_1}{g \circ \pi_2}$.
         
         \item In a poset $(P, \leq)$, coproducts are joins or suprema, $p \join q$. This again shows that not all categories have all coproducts.
     \end{enumexample}
-\end{example}
+\end{examplebreak}
 
 
 \begin{remark}
@@ -1109,7 +1132,7 @@ This definition of $\Subset$ is clearly independent of the choice of representat
 
 \chapter{Exponentials}
 
-\newcommand{\eval}{\mathit{ev}}
+\newcommand{\eval}{\mathrm{ev}}
 
 \begin{definition}[Exponentials]
     Let $\catC$ be a category with binary products. An \emph{exponential} of an object $C$ by an object $B$ is given by the pair\footnotemark{} $[C^B, \eval]$, where $C^B$ is an object and $\eval \colon C^B \times B \to C$ an arrow, that satisfies the following property: For every object $A$ and arrow $g \colon A \times B \to C$ in $\catC$ there is a unique arrow $\overline g \colon A \to C^B$ such that the diagram
@@ -1134,7 +1157,7 @@ This definition of $\Subset$ is clearly independent of the choice of representat
 As with limits we can define a category in which the exponential is a terminal object. Given objects $B$ and $C$ from a category $\catC$, define a category $\catC_{E(B,C)}$ with the following data:
 %
 \begin{enumerate}
-    \item Objects are pairs $[A, g]$, where $A$ is an object $g \colon A \times B \to C$ an arrow in $\catC$.
+    \item Objects are pairs $[A, g]$, where $A$ is an object and $g \colon A \times B \to C$ an arrow in $\catC$.
 
     \item An arrow from $[A,g]$ to $[A',g']$ is a $\catC$-arrow $h \colon A \to A'$ such that the diagram
     %
@@ -1154,9 +1177,51 @@ As with limits we can define a category in which the exponential is a terminal o
     commutes.
 \end{enumerate}
 %
-Identity arrows and composition are inherited from $\catC$. The exponential $[C^B, \eval]$ is then terminal in this category, and so it is unique up to isomorphism compatible with the evaluation arrows.
+Identity arrows and composition are inherited from $\catC$. The exponential $[C^B, \eval]$ is then terminal in this category, and so it is unique up to unique isomorphism compatible with the evaluation arrows.
 
 Note that an exponential $[C^B, \eval]$ in a category $\catC$ is a limit in the derived category $\catC_{E(B,C)}$ but \emph{not} in $\catC$, since $[C^B, \eval]$ is not even an object in $\catC$.
+
+
+\begin{remark}
+    If $[E, \eval]$ and $[E', \eval']$ are both terminal objects in the category $\catC_{E(B,C)}$, then they are of course isomorphic. We claim that the objects $E$ and $E'$ are also isomorphic in $\catC$.
+
+    Let $f \colon E \to E'$ and $g \colon E' \to E$ be the unique $\catC$-arrows making the corresponding diagrams commute. We then obtain the diagram
+    %
+    \begin{equation*}
+        \begin{tikzcd}
+            E \times B
+                \ar[d, "f \times 1_B", swap, dashed]
+                \ar[dr, "\eval"]
+            \\
+            E' \times B
+                \ar[r, "\eval'", swap]
+                \ar[d, "g \times 1_B", swap, dashed]
+            & C
+            \\
+            E \times B
+                \ar[ur, "\eval", swap]
+        \end{tikzcd}
+    \end{equation*}
+    %
+    Since $(g \times 1_B) \circ (f \times 1_B) = (g \circ f) \times 1_B$, this implies the commutativity of the diagram
+    %
+    \begin{equation*}
+        \begin{tikzcd}[row sep=tiny]
+            E \times B
+                \ar[dd, "(g \circ f) \times 1_B", swap, dashed]
+                \ar[dr, "\eval"]
+            \\
+            & C
+            \\
+            E \times B
+                \ar[ur, "\eval", swap]
+        \end{tikzcd}
+    \end{equation*}
+    %
+    Replacing $g \circ f$ with $1_E$ also makes the diagram commute, so uniqueness implies that $g \circ f = 1_E$. By symmetry we also have $f \circ g = 1_{E'}$, so in total $E \cong E'$ as claimed.
+
+    More succinctly, since arrows and composition of arrows in $\catC_{E(B,C)}$ are inherited directly from $\catC$, then an arrow $h \colon [A,g] \to [A',g']$ in the former category has an inverse if and only if the corresponding arrow $h \colon A \to A'$ has an inverse in the latter category.
+\end{remark}
 
 
 \begin{examplebreak}
